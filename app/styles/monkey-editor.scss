@@ -1,0 +1,19 @@
+.mk-editable {
+  height: auto;
+  overflow: scroll;
+
+  & > div {
+    border: 1px dotted rgba(0,0,0,0.1);
+  }
+  & > div div {
+    border: 1px dotted rgba(0,0,0,0.2);
+
+    &:hover {
+      border: 1px solid rgba(0,0,0,0.6);
+    }
+  }
+}
+
+.mk-object-bar + .mk-editable {
+  margin-top: 8px;
+} 
