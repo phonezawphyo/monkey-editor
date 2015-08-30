@@ -4,13 +4,10 @@ console.log('main.js');
     var monkey = $.extend(true, {
         callbacks: {
             afterInitialize: [],
-            afterEditorKeydown: [],
             onReturn: [function(e) {
                 if (!e.shiftKey) {
-                    document.execCommand('insertHTML', false, '<br><br>');
-                    //monkey.fn.moveCaret(window,1);
+                    document.execCommand('insertHTML', false, '<div><br></div><br>');
                     return false;
-                    return true;
                 } else {
                     return true;
                 }
@@ -43,22 +40,18 @@ console.log('main.js');
             extendLocales: function (extLocales) {
                 monkey.locales = $.extend(true, extLocales, monkey.locales);
             },
-            moveCaret: function (win, charCount) {
-                var sel, range;
-                if (win.getSelection) {
-                      sel = win.getSelection();
-                  if (sel.rangeCount > 0) {
-                      var textNode = sel.focusNode;
-                      var newOffset = sel.focusOffset + charCount;
-                      sel.collapse(textNode, Math.min(textNode.length, newOffset));
-                  }
-                } else if ( (sel = win.document.selection) ) {
-                    if (sel.type != "Control") {
-                        range = sel.createRange();
-                        range.move("character", charCount);
-                        range.select();
-                    }
-                }
+            extendViews: function (extViews) {
+                monkey.views = $.extend(true, extViews, monkey.views);
+            },
+            extendBindings: function (extBindings) {
+                monkey.bindings = $.extend(true, extBindings, monkey.bindings);
+            },
+            triggerInsertNode: function (target) {
+                var self = this;
+                this.trigger({
+                    type: 'monkey:insertNode',
+                    insertTarget: target,
+                });
             },
             insertAtCaret: function (html) {
                 var doc = document;
@@ -70,12 +63,31 @@ console.log('main.js');
                 if (document.selection){
                     range = doc.selection.createRange();
                     range.pasteHTML(html);
+                    this.triggerInsertNode(html);
                 
                 // IE 11 && Firefox, Opera .....
                 } else if (document.getSelection){
                     range = doc.getSelection().getRangeAt(0);
                     //range.surroundContents(html);
                     range.insertNode(html);
+                    this.triggerInsertNode(html);
+                }
+            },
+            moveCaret: function (win, charCount) {
+                var sel, range;
+                if (win.getSelection) {
+                    sel = win.getSelection();
+                    if (sel.rangeCount > 0) {
+                        var textNode = sel.focusNode;
+                        var newOffset = sel.focusOffset + charCount;
+                        sel.collapse(textNode, Math.min(textNode.length, newOffset));
+                    }
+                } else if ( (sel = win.document.selection) ) {
+                    if (sel.type !== 'Control') {
+                        range = sel.createRange();
+                        range.move('character', charCount);
+                        range.select();
+                    }
                 }
             },
             getCaretPosition: function (elem) {
@@ -89,7 +101,7 @@ console.log('main.js');
                 range2.setEnd(range1.endContainer, range1.endOffset);
                 return range2.toString().length;
             },
-            setCaretPosition: function (elem, pos) {
+            setCaretPosition: function (elem, caretPos) {
                 var range;
                 if (elem instanceof $) {
                     elem = elem[0];
@@ -106,64 +118,8 @@ console.log('main.js');
                     }
                 }
             },
-            insertAtCaret2: function (html, selectPastedContent) {
-                var sel, range;
-                if (window.getSelection) {
-                    // IE9 and non-IE
-                    sel = window.getSelection();
-                    if (sel.getRangeAt && sel.rangeCount) {
-                        range = sel.getRangeAt(0);
-                        range.deleteContents();
-            
-                        // Range.createContextualFragment() would be useful here but is
-                        // only relatively recently standardized and is not supported in
-                        // some browsers (IE9, for one)
-                        var el = document.createElement('div');
-                        el.innerHTML = html;
-                        var frag = document.createDocumentFragment(), node, lastNode;
-                        while ( (node = el.firstChild) ) {
-                            lastNode = frag.appendChild(node);
-                        }
-                        var firstNode = frag.firstChild;
-                        range.insertNode(frag);
-            
-                        // Preserve the selection
-                        if (lastNode) {
-                            range = range.cloneRange();
-                            range.setStartAfter(lastNode);
-                            if (selectPastedContent) {
-                                range.setStartBefore(firstNode);
-                            } else {
-                                range.collapse(true);
-                            }
-                            sel.removeAllRanges();
-                            sel.addRange(range);
-                        }
-                    }
-                } else if ( (sel = document.selection) && sel.type !== 'Control') {
-                    // IE < 9
-                    var originalRange = sel.createRange();
-                    originalRange.collapse(true);
-                    sel.createRange().pasteHTML(html);
-                    if (selectPastedContent) {
-                        range = sel.createRange();
-                        range.setEndPoint('StartToStart', originalRange);
-                        range.select();
-                    }
-                }
-            },
         },
         bindings: {
-            editorKeydown: function (e) {
-                //var editor = $(this).data("monkey-editor");
-                if (e.keyCode === 13) {
-                    // insert 2 br tags 
-                    // (if only one br tag is inserted the cursor won't go to the next line)
-                    return monkey.fn.execCallbacks.call(this, monkey.callbacks.onReturn, e);
-                }
-                // Allow extension of editor keydown event
-                monkey.fn.execCallbacks.call(this, monkey.callbacks.afterEditorKeydown);
-            },
         },
     }, (window.monkey || {}));
 
@@ -189,6 +145,11 @@ console.log('main.js');
         }, options);
 
         var editor = monkey.views.makeEditor.call(this);
+
+        this.editor = editor;
+        this.editor.insertAtCaret = monkey.fn.insertAtCaret;
+        this.editor.triggerInsertNode = monkey.fn.triggerInsertNode;
+        this.editor.triggerUnfocus = monkey.fn.triggerUnfocus;
                 
         editor.attr({contenteditable: true});
         editor.data('monkey-editor', this);
@@ -207,7 +168,7 @@ console.log('main.js');
             this.t = monkey.locales[this.options.locale];
 
             // Bindings
-            editor.on('keydown', monkey.bindings.editorKeydown);
+            //editor.on('keydown', monkey.bindings.editorKeydown);
            
             // Allow extension of initialize via callback
             monkey.fn.execCallbacks.call(self, monkey.callbacks.afterInitialize);

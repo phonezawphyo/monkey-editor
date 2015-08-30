@@ -26,13 +26,16 @@ console.log('02-object-bar.js');
             pageHeader: function () {
                 var title = this.t.objectBar.pageHeader.title;
                 var smallText= this.t.objectBar.pageHeader.smallText;
-                monkey.fn.insertAtCaret($('<div><h1>'+title+'<small>'+smallText+'</small></h1></div>')
-                                        .addClass('page-header'));
+                var elem = $('<div><h1>'+title+'<small>'+smallText+'</small></h1></div>')
+                .addClass('page-header');
+
+                this.editor.insertAtCaret(elem);
             },
             jumbotron: function () {
                 var title = this.t.objectBar.jumbotron.title;
-                monkey.fn.insertAtCaret($('<div>'+title+'</div>')
-                                        .addClass('jumbotron'));
+                this.editor
+                .insertAtCaret($('<div>'+title+'</div>')
+                .addClass('jumbotron'));
             },
         },
 
@@ -95,8 +98,12 @@ console.log('02-object-bar.js');
             
         // Bind events
         $('button', objBar).on('click', function objButtonOnclick() {
-             var event = $(this).attr('data-event');
-             monkey.objectBar.events[event].call(self);
+            if (!!self.divSelector) {
+                self.divSelector.triggerUnselect();
+            }
+
+            var event = $(this).attr('data-event');
+            monkey.objectBar.events[event].call(self);
         });
     });
 

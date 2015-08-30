@@ -2,6 +2,8 @@
   height: auto;
   overflow: scroll;
 
+  position: relative;
+
   & > div {
     border: 1px dotted rgba(0,0,0,0.1);
   }
@@ -10,6 +12,50 @@
 
     &:hover {
       border: 1px solid rgba(0,0,0,0.6);
+    }
+  }
+
+  .mk-space {
+    background-color: rgba(0,0,0,0.15);
+    -webkit-transform: scaleY(0.5);
+    min-height: 20px;
+    transition: -webkit-transform 0.15s ease-out;
+    &:hover {
+      -webkit-transform: none;
+    }
+  }
+
+  .mk-selection-box {
+    $select-color: rgba(0,0,200,0.6);
+    $margin-color: rgba(250,160,0,0.3);
+    min-height: 20px;
+    min-width: 20px;
+    border: 1px solid $select-color;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background: 
+      linear-gradient(to bottom, #{$margin-color}, #{$margin-color}) left center no-repeat, 
+      linear-gradient(to bottom, #{$margin-color}, #{$margin-color}) right center no-repeat,
+      linear-gradient(to bottom, #{$margin-color}, #{$margin-color}) center top no-repeat, 
+      linear-gradient(to bottom, #{$margin-color}, #{$margin-color}) center bottom no-repeat;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: -4px;
+      background: 
+        linear-gradient(to bottom, $select-color, $select-color) no-repeat,
+        linear-gradient(to bottom, $select-color, $select-color) no-repeat,
+        linear-gradient(to bottom, $select-color, $select-color) no-repeat,
+        linear-gradient(to bottom, $select-color, $select-color) no-repeat;
+      background-size: 8px 8px;
+      background-position: left top, right top, left bottom, right bottom;
     }
   }
 }

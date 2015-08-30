@@ -1,5 +1,5 @@
 'use strict';
-console.log('toolbar.js');
+console.log('01-toolbar.js');
 (function() {
     var monkey = window.monkey;
 
