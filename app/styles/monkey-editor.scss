@@ -4,18 +4,26 @@
 
   position: relative;
 
-  & > div {
-    border: 1px dotted rgba(0,0,0,0.1);
-  }
-  & > div div {
-    border: 1px dotted rgba(0,0,0,0.2);
+  div {
+    border-left: 5px dotted rgba(0,0,0,0.1);
+    outline: 1px dotted rgba(0,0,0,0.2);
 
     &:hover {
-      border: 1px solid rgba(0,0,0,0.6);
+      outline: 1px dotted rgba(0,0,0,0.8);
     }
+
+  }
+
+  & > div {
+
+    &:hover {
+    }
+  }
+  & > div div {
   }
 
   .mk-space {
+    outline: none;
     background-color: rgba(0,0,0,0.15);
     -webkit-transform: scaleY(0.5);
     min-height: 20px;
@@ -60,6 +68,7 @@
   }
 }
 
-.mk-object-bar + .mk-editable {
+.btn-toolbar + .btn-object-bar,
+.btn-toolbar + .mk-editable {
   margin-top: 8px;
 } 

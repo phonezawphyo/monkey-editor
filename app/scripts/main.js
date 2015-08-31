@@ -4,6 +4,7 @@ console.log('main.js');
     var monkey = $.extend(true, {
         callbacks: {
             afterInitialize: [],
+            afterExecCommand: [],
             onReturn: [function(e) {
                 if (!e.shiftKey) {
                     document.execCommand('insertHTML', false, '<div><br></div><br>');
@@ -37,6 +38,13 @@ console.log('main.js');
                     }
                 }
             },
+            execCommand: function (commandAndArgs, value) {
+                var arr = commandAndArgs.split(' '),
+                    command = arr.shift(),
+                    args = arr.join(' ') + (value || '');
+                document.execCommand(command, 0, args);
+                this.mk.execCallbacks(monkey.callbacks.afterExecCommand);
+            },
             extendLocales: function (extLocales) {
                 monkey.locales = $.extend(true, extLocales, monkey.locales);
             },
@@ -46,12 +54,35 @@ console.log('main.js');
             extendBindings: function (extBindings) {
                 monkey.bindings = $.extend(true, extBindings, monkey.bindings);
             },
+            extendOptions: function(extOptions) {
+                this.options = $.extend(true, extOptions, this.options);
+            },
             triggerInsertNode: function (target) {
-                var self = this;
                 this.trigger({
                     type: 'monkey:insertNode',
                     insertTarget: target,
                 });
+            },
+            getCurrentRange: function () {
+                var sel = window.getSelection();
+                if (sel.getRangeAt && sel.rangeCount) {
+                    return sel.getRangeAt(0);
+                }
+            },
+            saveSelection: function () {
+                this.selectedRange = this.getCurrentRange();
+            },
+            restoreSelection: function () {
+                var selection = window.getSelection();
+                if (!!this.selectedRange) {
+                    try {
+                        selection.removeAllRanges();
+                    } catch (ex) {
+                        document.body.createTextRange().select();
+                        document.selection.empty();
+                    }
+                    selection.addRange(this.selectedRange);
+                }
             },
             insertAtCaret: function (html) {
                 var doc = document;
@@ -144,19 +175,24 @@ console.log('main.js');
 
         }, options);
 
+        this.execCallbacks = monkey.fn.execCallbacks;
         var editor = monkey.views.makeEditor.call(this);
 
         this.editor = editor;
+        this.editor.mk = this;
+        this.editor.options = options;
         this.editor.insertAtCaret = monkey.fn.insertAtCaret;
         this.editor.triggerInsertNode = monkey.fn.triggerInsertNode;
         this.editor.triggerUnfocus = monkey.fn.triggerUnfocus;
+        this.editor.getCurrentRange = monkey.fn.getCurrentRange;
+        this.editor.saveSelection = monkey.fn.saveSelection;
+        this.editor.restoreSelection = monkey.fn.restoreSelection;
+        this.editor.execCommand = monkey.fn.execCommand;
                 
         editor.attr({contenteditable: true});
         editor.data('monkey-editor', this);
 
-        this.extendOptions = function(extOptions) {
-            this.options = $.extend(true, extOptions, this.options, this.options);
-        };
+        this.extendOptions = monkey.fn.extendOptions;
         
         var initialize = function () {
             editor.css({
@@ -171,12 +207,20 @@ console.log('main.js');
             //editor.on('keydown', monkey.bindings.editorKeydown);
            
             // Allow extension of initialize via callback
-            monkey.fn.execCallbacks.call(self, monkey.callbacks.afterInitialize);
+            this.execCallbacks(monkey.callbacks.afterInitialize);
 
             this.data('options', options);
+
+            // Render tooltips
+            $('body').tooltip({
+                selector: '[rel=tooltip]',
+            });
         };
 
         initialize.call(this);
+
+        console.log(this);
+        window.mk = this;
 
         return this;
     };

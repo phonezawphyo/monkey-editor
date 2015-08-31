@@ -4,11 +4,16 @@ console.log('02-object-bar.js');
     var monkey = window.monkey;
 
     monkey.objectBar = {
+        options: {
+            objectBar: {
+                bootstrap: ['pageHeader', 'jumbotron', 'panel'],
+            },
+        },
 
         objects: {
             pageHeader: function () {
                 return {
-                    icon: 'header',
+                    text: 'H',
                     title: this.t.objectBar.pageHeader.title,
                     event: 'pageHeader',
                 };
@@ -18,6 +23,13 @@ console.log('02-object-bar.js');
                     text: 'J',
                     title: this.t.objectBar.jumbotron.title,
                     event: 'jumbotron',
+                };
+            },
+            panel: function () {
+                return {
+                    text: 'P',
+                    title: this.t.objectBar.jumbotron.title,
+                    event: 'panel',
                 };
             },
         },
@@ -33,9 +45,18 @@ console.log('02-object-bar.js');
             },
             jumbotron: function () {
                 var title = this.t.objectBar.jumbotron.title;
-                this.editor
-                .insertAtCaret($('<div>'+title+'</div>')
-                .addClass('jumbotron'));
+                var elem = $('<div>'+title+'</div>').addClass('jumbotron');
+
+                this.editor.insertAtCaret(elem);
+            },
+            panel: function () {
+                var title = this.t.objectBar.panel.title;
+                var body = this.t.objectBar.panel.body;
+                var elem = $('<div class="panel panel-default"></div>')
+                .append($('<div class="panel-heading">').append(title))
+                .append($('<div class="panel-body">').append(body));
+
+                this.editor.insertAtCaret(elem);
             },
         },
 
@@ -44,7 +65,7 @@ console.log('02-object-bar.js');
                 return $('<div>').addClass('mk-object-bar btn-toolbar').attr({role: 'toolbar'});
             },
             makeObjectGroup: function () {
-                return $('<div>').addClass('btn-group');
+                return $('<div>').addClass('btn-group btn-group-sm');
             },
             makeObject: function (obj) {
                 var btn = $('<button type=button>').addClass('btn btn-default')
@@ -86,15 +107,11 @@ console.log('02-object-bar.js');
         var self = this;
 
         // Extend options
-        this.extendOptions({
-            objectBar: {
-                bootstrap: ['pageHeader', 'jumbotron'],
-            },
-        });
+        this.extendOptions(monkey.objectBar.options);
 
         // Make and add object bar
         var objBar = monkey.objectBar.init.call(this);
-        this.after(objBar);
+        this.editor.before(objBar);
             
         // Bind events
         $('button', objBar).on('click', function objButtonOnclick() {
@@ -117,6 +134,10 @@ console.log('02-object-bar.js');
                 },
                 jumbotron: {
                     title: 'Jumbotron',
+                },
+                panel: {
+                    title: 'Panel Heading',
+                    body: 'Panel Body',
                 },
             },
         },

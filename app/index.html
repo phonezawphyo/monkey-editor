@@ -12,7 +12,6 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
-
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
@@ -39,6 +38,73 @@
             <form>
               <div class="form-group">
                 <label for="monkey-editor">Monkey Editor</label>
+
+                <div class="btn-toolbar" data-role="editor-toolbar" data-target="#monkey-editor">
+                  <div class="btn-group btn-group-sm">
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=top title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li><a data-edit="fontName Serif" style="font-family:'Serif'">Serif</a></li>
+                      <li><a data-edit="fontName Sans" style="font-family:'Sans'">Sans</a></li>
+                      <li><a data-edit="fontName Arial" style="font-family:'Arial'">Arial</a></li>
+                      <li><a data-edit="fontName Arial Black" style="font-family:'Arial Black'">Arial Black</a></li>
+                      <li><a data-edit="fontName Courier" style="font-family:'Courier'">Courier</a></li>
+                      <li><a data-edit="fontName Courier New" style="font-family:'Courier New'">Courier New</a></li>
+                      <li><a data-edit="fontName Comic Sans MS" style="font-family:'Comic Sans MS'">Comic Sans MS</a></li>
+                      <li><a data-edit="fontName Helvetica" style="font-family:'Helvetica'">Helvetica</a></li>
+                      <li><a data-edit="fontName Impact" style="font-family:'Impact'">Impact</a></li>
+                      <li><a data-edit="fontName Lucida Grande" style="font-family:'Lucida Grande'">Lucida Grande</a></li>
+                      <li><a data-edit="fontName Lucida Sans" style="font-family:'Lucida Sans'">Lucida Sans</a></li>
+                      <li><a data-edit="fontName Tahoma" style="font-family:'Tahoma'">Tahoma</a></li>
+                      <li><a data-edit="fontName Times" style="font-family:'Times'">Times</a></li>
+                      <li><a data-edit="fontName Times New Roman" style="font-family:'Times New Roman'">Times New Roman</a></li>
+                      <li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
+                  </div>
+                  <div class="btn-group btn-group-sm">
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=top title="Font Size"><span class="fa fa-text-height"></span>&nbsp;<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+                      <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+                      <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+                    </ul>
+                  </div>
+                  <div class="btn-group btn-group-sm">
+                    <a class="btn btn-default" data-edit="bold" data-toggle=tooltip data-placement=top title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+                    <a class="btn btn-default" data-edit="italic" data-toggle=tooltip data-placement=top title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+                    <a class="btn btn-default" data-edit="strikethrough" data-toggle=tooltip data-placement=top title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+                    <a class="btn btn-default" data-edit="underline" data-toggle=tooltip data-placement=top title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                  </div>
+                  <div class="btn-group btn-group-sm">
+                    <a class="btn btn-default" data-edit="insertunorderedlist" data-toggle=tooltip data-placement=top title="Bullet list"><i class="fa fa-list-ul"></i></a>
+                    <a class="btn btn-default" data-edit="insertorderedlist" data-toggle=tooltip data-placement=top title="Number list"><i class="fa fa-list-ol"></i></a>
+                    <a class="btn btn-default" data-edit="outdent" data-toggle=tooltip data-placement=top title="Reduce indent (Shift+Tab)"><i class="fa fa-outdent"></i></a>
+                    <a class="btn btn-default" data-edit="indent" data-toggle=tooltip data-placement=top title="Indent (Tab)"><i class="fa fa-indent"></i></a>
+                  </div>
+                  <div class="btn-group btn-group-sm">
+                    <a class="btn btn-default" data-edit="justifyleft" data-toggle=tooltip data-placement=top title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                    <a class="btn btn-default" data-edit="justifycenter" data-toggle=tooltip data-placement=top title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+                    <a class="btn btn-default" data-edit="justifyright" data-toggle=tooltip data-placement=top title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+                    <a class="btn btn-default" data-edit="justifyfull" data-toggle=tooltip data-placement=top title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+                  </div>
+                  <div class="btn-group btn-group-sm">
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=top title="Hyperlink"><i class="fa fa-link"></i></a>
+                    <div class="dropdown-menu input-append">
+                      <input class="span2" placeholder="URL" type="text" data-edit="createLink">
+                      <button class="btn btn-default" type="button">Add</button>
+                    </div>
+                    <a class="btn btn-default" data-edit="unlink" data-toggle=tooltip data-placement=top title="Remove Hyperlink"><i class="fa fa-scissors"></i></a>
+
+                  </div>
+
+                  <div class="btn-group btn-group-sm">
+                    <a class="btn btn-default" title="" id="pictureBtn" data-original-title="Insert picture (or just drag &amp; drop)"><i class="fa fa-picture-o"></i></a>
+                    <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 36px; height: 30px;">
+                  </div>
+                  <div class="btn-group btn-group-sm">
+                    <a class="btn btn-default" data-edit="undo" data-toggle=tooltip data-placement=top title="Undo (Ctrl/Cmd+Z)"><i class="fa fa-undo"></i></a>
+                    <a class="btn btn-default" data-edit="redo" data-toggle=tooltip data-placement=top title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
+                  </div>
+                  <input type="text" data-edit="inserttext" id="voiceBtn" x-webkit-speech="" style="display: none;">
+                </div>
                 <textarea class="form-control" id="monkey-editor" data-monkey-editor>
                 </textarea>
               </div>
@@ -48,50 +114,50 @@
 
 
             <div class="footer">
-                <p><span class="glyphicon glyphicon-heart"></span> Pone Z Pyo</p>
+              <p><span class="glyphicon glyphfa fa-heart"></span> Pone Z Pyo</p>
             </div>
 
-        </div>
+          </div>
 
 
-        <!-- build:js scripts/vendor.js -->
-        <!-- bower:js -->
-        <script src="bower_components/jquery/dist/jquery.js"></script>
-        <!-- endbower -->
-        <!-- endbuild -->
+          <!-- build:js scripts/vendor.js -->
+          <!-- bower:js -->
+          <script src="bower_components/jquery/dist/jquery.js"></script>
+          <!-- endbower -->
+          <!-- endbuild -->
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
+          <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+          <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+                                                                    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
             e=o.createElement(i);r=o.getElementsByTagName(i)[0];
             e.src='//www.google-analytics.com/analytics.js';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script>
+          </script>
 
-        <!-- build:js scripts/plugins.js -->
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/alert.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/dropdown.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/modal.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/transition.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/button.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/popover.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/carousel.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/scrollspy.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/collapse.js"></script>
-        <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tab.js"></script>
-        <!-- endbuild -->
+          <!-- build:js scripts/plugins.js -->
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/alert.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/dropdown.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/modal.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/transition.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/button.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/popover.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/carousel.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/scrollspy.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/collapse.js"></script>
+          <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tab.js"></script>
+          <!-- endbuild -->
 
-        <!-- build:js({app,.tmp}) scripts/main.js -->
-        <script src="scripts/monkey.locales.en.js"></script>
-        <script src="scripts/main.js"></script>
-        <script src="scripts/00-div-selector.js"></script>
-        <script src="scripts/01-toolbar.js"></script>
-        <script src="scripts/02-object-bar.js"></script>
-        <script src="scripts/03-space-divs.js"></script>
-        <!-- endbuild -->
-</body>
-</html>
+          <!-- build:js({app,.tmp}) scripts/main.js -->
+          <script src="scripts/monkey.locales.en.js"></script>
+          <script src="scripts/main.js"></script>
+          <script src="scripts/00-div-selector.js"></script>
+          <script src="scripts/01-toolbar.js"></script>
+          <script src="scripts/02-object-bar.js"></script>
+          <script src="scripts/03-space-divs.js"></script>
+          <!-- endbuild -->
+        </body>
+      </html>

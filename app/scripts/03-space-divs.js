@@ -6,8 +6,9 @@ console.log('03-space-divs.js');
         moveDelay: 0,
         hideDelay: 0,
 
-        klass: function(editor) {
-            this.editor = editor;
+        klass: function(monkeyEditor) {
+            this.monkeyEditor = monkeyEditor;
+            this.editor = this.monkeyEditor.editor;
             var spaceDivs = monkey.spaceDivs;
             this.top = spaceDivs.views.makeTop.call(this);
             this.bottom = spaceDivs.views.makeBottom.call(this);
@@ -121,7 +122,7 @@ console.log('03-space-divs.js');
     monkey.callbacks.afterInitialize.push(function spaceDivsAfterInitialize() {
         var editor = this.editor;
 
-        editor.data('space-divs', new monkey.spaceDivs.klass(editor));
+        editor.data('space-divs', new monkey.spaceDivs.klass(this));
 
         // Bindings
         editor.on('monkey:selectDiv', monkey.spaceDivs.bindings.editorSelectDiv);
