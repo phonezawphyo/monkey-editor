@@ -5,31 +5,23 @@
   position: relative;
 
   div {
+    min-height: 20px;
     border-left: 5px dotted rgba(0,0,0,0.1);
     outline: 1px dotted rgba(0,0,0,0.2);
 
     &:hover {
       outline: 1px dotted rgba(0,0,0,0.8);
     }
-
-  }
-
-  & > div {
-
-    &:hover {
-    }
-  }
-  & > div div {
   }
 
   .mk-space {
     outline: none;
     background-color: rgba(0,0,0,0.15);
-    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
     min-height: 20px;
-    transition: -webkit-transform 0.15s ease-out;
+    transition: transform 0.15s ease-out;
     &:hover {
-      -webkit-transform: none;
+      transform: none;
     }
   }
 
@@ -68,6 +60,13 @@
   }
 }
 
+.dropdown-menu > li > a {
+  cursor: pointer;
+}
+
+.btn-group {
+  margin-bottom: 8px;
+}
 .btn-toolbar + .btn-object-bar,
 .btn-toolbar + .mk-editable {
   margin-top: 8px;

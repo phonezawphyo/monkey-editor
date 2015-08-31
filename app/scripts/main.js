@@ -4,7 +4,6 @@ console.log('main.js');
     var monkey = $.extend(true, {
         callbacks: {
             afterInitialize: [],
-            afterExecCommand: [],
             onReturn: [function(e) {
                 if (!e.shiftKey) {
                     document.execCommand('insertHTML', false, '<div><br></div><br>');
@@ -41,9 +40,28 @@ console.log('main.js');
             execCommand: function (commandAndArgs, value) {
                 var arr = commandAndArgs.split(' '),
                     command = arr.shift(),
+                    insertId,
                     args = arr.join(' ') + (value || '');
+
+                if (command === 'insertHTML') {
+                    insertId = this.nextInsertId(); 
+                    args = $(args).attr({ 'data-monkey-id': insertId })[0].outerHTML;
+                }
+
                 document.execCommand(command, 0, args);
-                this.mk.execCallbacks(monkey.callbacks.afterExecCommand);
+
+                this.mk.trigger({
+                  type: 'monkey:execCommand',
+                  command: command,
+                  args: args,
+                  insertId: insertId,
+                });
+            },
+            nextInsertId: function() {
+                if (!this.insertId) {
+                    this.insertId = 1;
+                }
+                return 'monkey' + (this.insertId++);
             },
             extendLocales: function (extLocales) {
                 monkey.locales = $.extend(true, extLocales, monkey.locales);
@@ -188,6 +206,7 @@ console.log('main.js');
         this.editor.saveSelection = monkey.fn.saveSelection;
         this.editor.restoreSelection = monkey.fn.restoreSelection;
         this.editor.execCommand = monkey.fn.execCommand;
+        this.editor.nextInsertId = monkey.fn.nextInsertId;
                 
         editor.attr({contenteditable: true});
         editor.data('monkey-editor', this);
@@ -212,8 +231,9 @@ console.log('main.js');
             this.data('options', options);
 
             // Render tooltips
-            $('body').tooltip({
-                selector: '[rel=tooltip]',
+            $('[data-toggle="tooltip"]').tooltip({
+                container: 'body',
+                viewport: 'body',
             });
         };
 

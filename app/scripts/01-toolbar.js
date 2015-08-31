@@ -92,10 +92,11 @@ console.log('01-toolbar.js');
             editor.saveSelection();
             toolbar.update();
         });
-    });
 
-    monkey.callbacks.afterExecCommand.push(function toolbarAfterExecCommand() {
-        this.toolbar.update();
+        // Monkey on command execute
+        this.on('monkey:execCommand', function(e) {
+            toolbar.update();
+        });
     });
 
     // Translations

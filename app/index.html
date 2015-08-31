@@ -41,6 +41,19 @@
 
                 <div class="btn-toolbar" data-role="editor-toolbar" data-target="#monkey-editor">
                   <div class="btn-group btn-group-sm">
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=top title="Font"><i class="fa fa-magic"></i><b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                      <li><a data-edit="formatBlock <div>">Normal</a></li>
+                      <li><a data-edit="formatBlock <blockquote>"><blockquote>Blockquote</blockquote></a></li>
+                      <li><a data-edit="formatBlock <h1>"><h1>H1</h1></a></li>
+                      <li><a data-edit="formatBlock <h2>"><h2>H2</h2></a></li>
+                      <li><a data-edit="formatBlock <h3>"><h3>H3</h3></a></li>
+                      <li><a data-edit="formatBlock <h4>"><h4>H4</h4></a></li>
+                      <li><a data-edit="formatBlock <h5>"><h5>H5</h5></a></li>
+                      <li><a data-edit="formatBlock <h6>"><h6>H6</h6></a></li>
+                    </ul>
+                  </div>
+                  <div class="btn-group btn-group-sm">
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=top title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
                     <ul class="dropdown-menu">
                       <li><a data-edit="fontName Serif" style="font-family:'Serif'">Serif</a></li>
@@ -62,9 +75,9 @@
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=top title="Font Size"><span class="fa fa-text-height"></span>&nbsp;<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                      <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
-                      <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
-                      <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+                      <li><a data-edit="fontSize 7">14px</a></li>
+                      <li><a data-edit="fontSize 6">13px</a></li>
+                      <li><a data-edit="fontSize 5">12px</a></li>
                     </ul>
                   </div>
                   <div class="btn-group btn-group-sm">
@@ -72,6 +85,7 @@
                     <a class="btn btn-default" data-edit="italic" data-toggle=tooltip data-placement=top title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
                     <a class="btn btn-default" data-edit="strikethrough" data-toggle=tooltip data-placement=top title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
                     <a class="btn btn-default" data-edit="underline" data-toggle=tooltip data-placement=top title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+                    <a class="btn btn-default" data-edit="removeFormat" data-toggle=tooltip data-placement=top title="Remove font style(Ctrl/Cmd+\)"><i class="fa fa-eraser"></i></a>
                   </div>
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-default" data-edit="insertunorderedlist" data-toggle=tooltip data-placement=top title="Bullet list"><i class="fa fa-list-ul"></i></a>
@@ -102,6 +116,14 @@
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-default" data-edit="undo" data-toggle=tooltip data-placement=top title="Undo (Ctrl/Cmd+Z)"><i class="fa fa-undo"></i></a>
                     <a class="btn btn-default" data-edit="redo" data-toggle=tooltip data-placement=top title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
+                  </div>
+                  <div class="btn-group btn-group-sm">
+                    <! Page Header>
+                    <a class="btn btn-default" data-edit="insertHTML <div class='page-header'><h1>Page Header <small>Small Text</small></h1></div>" data-toggle=tooltip data-placement=top title="Page Header">Page Header</a>
+                    <! Panel >
+                    <a class="btn btn-default" data-edit="insertHTML <div class='panel panel-default'><div class='panel-heading'>Panel Heading</div><div class='panel-body'>Panel Body</div></div>" data-toggle=tooltip data-placement=top title="Panel">Panel</a>
+                    <! Jumbotron >
+                    <a class="btn btn-default" data-edit="insertHTML <div class='jumbotron'><h1>Jumbotron</h1></div>" data-toggle=tooltip data-placement=top title="Jumbotron">Jumbotron</a>
                   </div>
                   <input type="text" data-edit="inserttext" id="voiceBtn" x-webkit-speech="" style="display: none;">
                 </div>
@@ -156,8 +178,7 @@
           <script src="scripts/main.js"></script>
           <script src="scripts/00-div-selector.js"></script>
           <script src="scripts/01-toolbar.js"></script>
-          <script src="scripts/02-object-bar.js"></script>
-          <script src="scripts/03-space-divs.js"></script>
+          <script src="scripts/02-space-divs.js"></script>
           <!-- endbuild -->
         </body>
       </html>
