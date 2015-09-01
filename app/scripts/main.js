@@ -1,9 +1,46 @@
 'use strict';
 console.log('main.js');
 (function($) {
+    /* Core methods */
     var monkey = $.extend(true, {
+        klass: function ($, options) {
+            options = options || {};
+
+            this.$ = $;
+
+            /** Default options */
+            this.options = $.extend(true, {
+                // Set locale
+                locale: 'en',
+
+                // Set height of editable area
+                height: 450,
+
+                // Icon prefix
+                iconPrefix: 'glyphicon glyphicon-',
+
+            }, options);
+
+            this.execCallbacks = monkey.fn.execCallbacks;
+            this.extendOptions = monkey.fn.extendOptions;
+            this.switchView= monkey.fn.switchView;
+
+            /* Set translations */
+            this.t = monkey.locales[this.options.locale];
+            
+            /* Init editor */
+            this.editor = new monkey.editor.klass(this);
+
+            /* Init codeview */
+            this.codeview = new monkey.codeview.klass(this);
+            
+            /* Allow extension of initialize via callback */
+            this.execCallbacks(monkey.callbacks.afterInitialize);
+        },
+
         callbacks: {
             afterInitialize: [],
+            /*
             onReturn: [function(e) {
                 if (!e.shiftKey) {
                     document.execCommand('insertHTML', false, '<div><br></div><br>');
@@ -12,16 +49,9 @@ console.log('main.js');
                     return true;
                 }
             }],
+           */
         },
 
-        views: {
-            makeIcon: function(icon) {
-                return $('<span>').addClass(this.options.iconPrefix + icon);
-            },
-            makeEditor: function() {
-                return $('<div>').addClass('mk-editable form-control');
-            },
-        },
         fn: {
             execCallbacks: function (callbacks, e) {
                 if (!!callbacks) {
@@ -37,6 +67,75 @@ console.log('main.js');
                     }
                 }
             },
+            extendLocales: function (extLocales) {
+                monkey.locales = $.extend(true, extLocales, monkey.locales);
+            },
+            extendOptions: function(extOptions) {
+                this.options = $.extend(true, extOptions, this.options);
+            },
+            switchView: function(toView) {
+                this.$.trigger({
+                    type: 'monkey:beforeViewSwitch',
+                    toView: toView,
+                });
+
+                this.previousView = this.activeView;
+                this.activeView = toView;
+
+                this.$.trigger({
+                    type: 'monkey:afterViewSwitch',
+                    toView: toView,
+                });
+            },
+        },
+        bindings: {
+        },
+
+        locales: {
+            en: {},
+        },
+    }, (window.monkey || {}));
+
+
+    /* Editor related methods */
+    monkey.editor = {
+        klass: function (monkeyEditor) {
+            this.$ = monkey.editor.views.makeEditor(monkeyEditor).insertAfter(monkeyEditor.$);
+            this.mk = monkeyEditor;
+            this.options = this.mk.options;
+
+            var fn = monkey.editor.fn;
+            this.code = fn.code;
+            this.execCommand = fn.execCommand;
+
+            this.nextInsertId = fn.nextInsertId;
+            this.insertAtCaret = fn.insertAtCaret;
+
+            this.triggerUnfocus = fn.triggerUnfocus;
+            this.triggerInsertNode = fn.triggerInsertNode;
+
+            this.saveSelection = fn.saveSelection;
+            this.restoreSelection = fn.restoreSelection;
+            this.getCurrentRange = fn.getCurrentRange;
+
+            /* Bindings */
+            this.mk.$.on('monkey:beforeViewSwitch', monkey.editor.bindings.beforeViewSwitch);
+            this.mk.$.on('monkey:afterViewSwitch', monkey.editor.bindings.afterViewSwitch);
+        },
+        views: {
+            makeEditor: function(monkeyEditor) {
+                return $('<div class="mk-editable form-control">')
+                .data('monkey-editor', monkeyEditor)
+                .attr({contenteditable: true})
+                .css({
+                    height: monkeyEditor.options.height + 'px',
+                });
+            },
+        },
+        fn: {
+            code: function () {
+                return this.$.html();
+            },
             execCommand: function (commandAndArgs, value) {
                 var arr = commandAndArgs.split(' '),
                     command = arr.shift(),
@@ -44,17 +143,17 @@ console.log('main.js');
                     args = arr.join(' ') + (value || '');
 
                 if (command === 'insertHTML') {
-                    insertId = this.nextInsertId(); 
+                    insertId = this.nextInsertId();
                     args = $(args).attr({ 'data-monkey-id': insertId })[0].outerHTML;
                 }
 
                 document.execCommand(command, 0, args);
 
-                this.mk.trigger({
-                  type: 'monkey:execCommand',
-                  command: command,
-                  args: args,
-                  insertId: insertId,
+                this.mk.$.trigger({
+                    type: 'monkey:execCommand',
+                    command: command,
+                    args: args,
+                    insertId: insertId,
                 });
             },
             nextInsertId: function() {
@@ -63,20 +162,14 @@ console.log('main.js');
                 }
                 return 'monkey' + (this.insertId++);
             },
-            extendLocales: function (extLocales) {
-                monkey.locales = $.extend(true, extLocales, monkey.locales);
-            },
             extendViews: function (extViews) {
                 monkey.views = $.extend(true, extViews, monkey.views);
             },
             extendBindings: function (extBindings) {
                 monkey.bindings = $.extend(true, extBindings, monkey.bindings);
             },
-            extendOptions: function(extOptions) {
-                this.options = $.extend(true, extOptions, this.options);
-            },
             triggerInsertNode: function (target) {
-                this.trigger({
+                this.$.trigger({
                     type: 'monkey:insertNode',
                     insertTarget: target,
                 });
@@ -139,108 +232,102 @@ console.log('main.js');
                     }
                 }
             },
-            getCaretPosition: function (elem) {
-                if (elem instanceof $) {
-                    elem = elem[0];
+        },
+        bindings: {
+            beforeViewSwitch: function (e) {
+                var $mk = $(this),
+                    mk = $mk.data('monkey-editor');
+                    
+                if (e.toView !== mk.editor) {
+                    mk.editor.$.hide();
                 }
-                elem.focus();
-                var range1 = window.getSelection().getRangeAt(0),
-                    range2 = range1.cloneRange();
-                range2.selectNodeContents(elem);
-                range2.setEnd(range1.endContainer, range1.endOffset);
-                return range2.toString().length;
             },
-            setCaretPosition: function (elem, caretPos) {
-                var range;
-                if (elem instanceof $) {
-                    elem = elem[0];
-                }
+            afterViewSwitch: function (e) {
+                var $mk = $(this),
+                    mk = $mk.data('monkey-editor');
 
-                if (elem.createTextRange) {
-                    range = elem.createTextRange();
-                    range.move('character', caretPos);
-                    range.select();
-                } else {
-                    elem.focus();
-                    if (elem.selectionStart !== undefined) {
-                        elem.setSelectionRange(caretPos, caretPos);
+                if (e.toView === mk.editor) {
+                    mk.editor.$.show();
+                    if (!!mk.previousView) {
+                        mk.editor.$.html(mk.previousView.code());
                     }
                 }
             },
         },
-        bindings: {
+    };
+
+    monkey.codeview = {
+        klass: function (monkeyEditor) {
+            this.mk = monkeyEditor;
+            this.options = this.mk.options;
+            this.$ = monkey.codeview.views.makeCodeview(monkeyEditor).insertAfter(this.mk.$);
+            this.code = monkey.codeview.fn.code;
+
+            /* Bindings */
+            this.mk.$.on('monkey:beforeViewSwitch', monkey.codeview.bindings.beforeViewSwitch);
+            this.mk.$.on('monkey:afterViewSwitch', monkey.codeview.bindings.afterViewSwitch);
         },
-    }, (window.monkey || {}));
+        views: {
+            makeCodeview: function(monkeyEditor) {
+                return $('<textarea class="mk-codeview form-control">')
+                .data('monkey-editor', monkeyEditor)
+                .attr({contenteditable: true})
+                .css({
+                    height: monkeyEditor.options.height + 'px',
+                });
+            },
+        },
+        fn: {
+            code: function () {
+                return this.$.val();
+            },
+        },
+        bindings: {
+            beforeViewSwitch: function (e) {
+                var $mk = $(this),
+                    mk = $mk.data('monkey-editor');
+                    
+                if (e.toView !== mk.codeview) {
+                    mk.codeview.$.hide();
+                }
+            },
+            afterViewSwitch: function (e) {
+                var $mk = $(this),
+                    mk = $mk.data('monkey-editor');
+
+                if (e.toView === mk.codeview) {
+                    mk.codeview.$.show();
+                    if (!!mk.previousView) {
+                        mk.codeview.$.val(mk.previousView.code());
+                    }
+                }
+            },
+        },
+    };
 
     window.monkey = monkey;
 
-
     $.fn.monkeyEditor = function (options) {
         options = options || {};
-        var self = this;
         this.hide();
+        this.mk = new monkey.klass(this, options);
+        this.data('monkey-editor', this.mk);
+        this.data('options', this.mk.options);
 
-        /** Default options */
-        self.options = $.extend(true, {
-            // Set locale
-            locale: 'en',
+        /* Set default view */
+        this.mk.switchView(this.mk.editor);
+            
+        /* Bindings */
+        //editor.on('keydown', monkey.bindings.editorKeydown);
 
-            // Set height of editable area
-            height: 450,
-
-            // Icon prefix
-            iconPrefix: 'glyphicon glyphicon-',
-
-        }, options);
-
-        this.execCallbacks = monkey.fn.execCallbacks;
-        var editor = monkey.views.makeEditor.call(this);
-
-        this.editor = editor;
-        this.editor.mk = this;
-        this.editor.options = options;
-        this.editor.insertAtCaret = monkey.fn.insertAtCaret;
-        this.editor.triggerInsertNode = monkey.fn.triggerInsertNode;
-        this.editor.triggerUnfocus = monkey.fn.triggerUnfocus;
-        this.editor.getCurrentRange = monkey.fn.getCurrentRange;
-        this.editor.saveSelection = monkey.fn.saveSelection;
-        this.editor.restoreSelection = monkey.fn.restoreSelection;
-        this.editor.execCommand = monkey.fn.execCommand;
-        this.editor.nextInsertId = monkey.fn.nextInsertId;
-                
-        editor.attr({contenteditable: true});
-        editor.data('monkey-editor', this);
-
-        this.extendOptions = monkey.fn.extendOptions;
-        
-        var initialize = function () {
-            editor.css({
-                height: self.options.height + 'px',
-            });
-            self.after(editor);
-
-            // Set translations
-            this.t = monkey.locales[this.options.locale];
-
-            // Bindings
-            //editor.on('keydown', monkey.bindings.editorKeydown);
-           
-            // Allow extension of initialize via callback
-            this.execCallbacks(monkey.callbacks.afterInitialize);
-
-            this.data('options', options);
-
-            // Render tooltips
-            $('[data-toggle="tooltip"]').tooltip({
-                container: 'body',
-                viewport: 'body',
-            });
-        };
-
-        initialize.call(this);
+        /* Render tooltips */
+        $('[data-toggle="tooltip"]').tooltip({
+            container: 'body',
+            viewport: 'body',
+        });
 
         console.log(this);
-        window.mk = this;
+        window.mk = this.mk;
 
         return this;
     };

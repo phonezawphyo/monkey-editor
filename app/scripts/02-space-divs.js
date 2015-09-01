@@ -124,14 +124,14 @@ console.log('03-space-divs.js');
             self = this,
             spaceDivs = new monkey.spaceDivs.klass(this);
 
-        editor.data('space-divs', spaceDivs);
+        editor.$.data('space-divs', spaceDivs);
 
         // Bindings
-        editor.on('monkey:selectDiv', monkey.spaceDivs.bindings.editorSelectDiv);
-        editor.on('monkey:unselectDiv', monkey.spaceDivs.bindings.editorUnselectDiv);
+        editor.$.on('monkey:selectDiv', monkey.spaceDivs.bindings.editorSelectDiv);
+        editor.$.on('monkey:unselectDiv', monkey.spaceDivs.bindings.editorUnselectDiv);
 
         if (!!this.divSelector) {
-            this.on('monkey:execCommand', function (e) {
+            this.$.on('monkey:execCommand', function (e) {
                 if (e.command === 'insertHTML') {
                     try {
                         self.divSelector.triggerSelect($('[data-monkey-id='+e.insertId+']')[0]);

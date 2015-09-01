@@ -31,8 +31,8 @@ console.log('00-div-selector.js');
             moveSelectionBox: function(target) {
                 target = $(target);
                 var pos = target.position();
-                pos.left = pos.left + this.editor.scrollLeft();
-                pos.top = pos.top + this.editor.scrollTop();
+                pos.left = pos.left + this.editor.$.scrollLeft();
+                pos.top = pos.top + this.editor.$.scrollTop();
 
                 var marginTop = target.css('margin-top');
                 var marginBottom = target.css('margin-bottom');
@@ -55,9 +55,9 @@ console.log('00-div-selector.js');
             },
             replaceSelectionBox: function () {
                 // Replace a new box if it was accidentally deleted
-                if (this.editor.find('.mk-selection-box').length === 0) {
+                if (this.editor.$.find('.mk-selection-box').length === 0) {
                     this.$ = this.makeSelectionBox();
-                    this.editor.append(this.$);
+                    this.editor.$.append(this.$);
                 }
             },
             isSelected: function() {
@@ -65,22 +65,22 @@ console.log('00-div-selector.js');
             },
             triggerSelect: function(target) {
                 this.target = target;
-                this.editor.trigger({
+                this.editor.$.trigger({
                     type: 'monkey:selectDiv',
                     selectTarget: target,
                 });
-                this.editor.trigger({
+                this.editor.$.trigger({
                     type: 'monkey:afterSelectDiv',
                     selectTarget: target,
                 });
             },
             triggerUnselect: function () {
                 this.target = null;
-                this.editor.trigger({
+                this.editor.$.trigger({
                     type: 'monkey:unselectDiv',
                     selectTarget: this.target,
                 });
-                this.editor.trigger({
+                this.editor.$.trigger({
                     type: 'monkey:afterUnselectDiv',
                     selectTarget: this.target,
                 });
@@ -120,33 +120,38 @@ console.log('00-div-selector.js');
     };
 
     monkey.callbacks.afterInitialize.push(function divSelectorAfterInitialize() {
-        var editor = this.editor;
-        var divSelector = new monkey.divSelector.klass(this);
+        var editor = this.editor,
+            divSelector = new monkey.divSelector.klass(this);
         this.divSelector = divSelector;
 
-        editor.data('div-selector', divSelector);
+        editor.$.data('div-selector', divSelector);
             
         // Bindings
-        editor.on('keydown', monkey.divSelector.bindings.editorKeydown);
-        editor.on('monkey:afterSelectDiv', function (e) {
+        editor.$.on('keydown', monkey.divSelector.bindings.editorKeydown);
+        editor.$.on('monkey:afterSelectDiv', function (e) {
             setTimeout(function triggerSelectTimeout() {
                 divSelector.moveSelectionBox(e.selectTarget);
                 divSelector.toggleSelectionBox(true);
             });
         });
-        editor.on('monkey:afterUnselectDiv', function () {
+        editor.$.on('monkey:afterUnselectDiv', function () {
             divSelector.toggleSelectionBox(false);
         });
-        editor.on('monkey:insertNode', function (e) {
+        editor.$.on('monkey:insertNode', function (e) {
             divSelector.triggerSelect(e.insertTarget);
             editor.focus();
         });
-        editor.on('blur', function () {
+        editor.$.on('blur', function () {
             divSelector.triggerUnselect();
+        });
+        this.$.on('monkey:beforeViewSwitch', function (e) {
+            if (e.toView !== editor) {
+                editor.$.find('.mk-selection-box').remove();
+            }
         });
 
         // Bindings
-        editor.on('click', monkey.divSelector.bindings.editorClick);
+        editor.$.on('click', monkey.divSelector.bindings.editorClick);
     });
 
 })(jQuery);
