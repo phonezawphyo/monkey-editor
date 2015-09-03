@@ -3,10 +3,12 @@ console.log('main.js');
 (function($) {
     /* Core methods */
     var monkey = $.extend(true, {
-        klass: function ($, options) {
+        klass: function (elem, options) {
             options = options || {};
 
-            this.$ = $;
+            this.wrapper = $('<div class="mk-wrapper">');
+            this.$ = elem;
+            this.wrapper.insertAfter(this.$);
 
             /** Default options */
             this.options = $.extend(true, {
@@ -30,7 +32,8 @@ console.log('main.js');
             /* Utilities */
             this.execCallbacks = monkey.fn.execCallbacks;
             this.extendOptions = monkey.fn.extendOptions;
-            this.switchView= monkey.fn.switchView;
+            this.switchView = monkey.fn.switchView;
+            this.toggleFullscreen = monkey.fn.toggleFullscreen;
             this.tidyHtml = monkey.fn.tidyHtml;
 
             /* Set translations */
@@ -95,6 +98,14 @@ console.log('main.js');
                     toView: toView,
                 });
             },
+            toggleFullscreen: function(fullscreen) {
+                this.wrapper.toggleClass('mk-fullscreen', fullscreen);
+                this.fullscreen = fullscreen;
+                this.$.trigger({
+                    type: 'monkey:toggleFullscreen',
+                    fullscreen: fullscreen,
+                });
+            },
             /* jshint ignore:start */
             tidyHtml: function (code) {
                 if (window.html_beautify) {
@@ -117,8 +128,8 @@ console.log('main.js');
     /* Editor related methods */
     monkey.editor = {
         klass: function (monkeyEditor) {
-            this.$ = monkey.editor.views.makeEditor(monkeyEditor).insertAfter(monkeyEditor.$);
             this.mk = monkeyEditor;
+            this.$ = monkey.editor.views.makeEditor(this.mk).appendTo(this.mk.wrapper);
             this.options = this.mk.options;
 
             var fn = monkey.editor.fn;
@@ -277,7 +288,7 @@ console.log('main.js');
         klass: function (monkeyEditor) {
             this.mk = monkeyEditor;
             this.options = this.mk.options;
-            this.$ = monkey.codeview.views.makeCodeview(monkeyEditor).insertAfter(this.mk.$);
+            this.$ = monkey.codeview.views.makeCodeview(monkeyEditor).appendTo(this.mk.wrapper);
             this.code = monkey.codeview.fn.code;
 
             /* Bindings */
@@ -336,6 +347,9 @@ console.log('main.js');
 
         /* Set default view */
         this.mk.switchView(this.mk.editor);
+
+        /* Set no fullscreen by default */
+        this.mk.toggleFullscreen(false);
             
         /* Bindings */
         //editor.on('keydown', monkey.bindings.editorKeydown);

@@ -1,3 +1,40 @@
+.mk-editable,
+.mk-codeview {
+  transition: all 0.3s ease-out;
+}
+
+.mk-toolbar-float {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1069;
+  padding: 8px;
+  background-color: rgba(0,0,0,0.85);
+}
+
+.mk-wrapper.mk-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1068;
+
+  .mk-editable, .mk-codeview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0;
+    z-index: 0;
+    height: auto !important;
+    outline: none !important;
+    border-color: transparent;
+  }
+}
+
 .mk-editable {
   height: auto;
   overflow: scroll;

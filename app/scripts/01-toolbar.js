@@ -11,6 +11,7 @@ console.log('01-toolbar.js');
                 commandKey: 'data-edit',
                 actionKey: 'data-action',
                 activeClass: 'active',
+                disabledClass: 'disabled',
                 enableOnCodeviewSelector: '[data-enable-codeview]',
                 commandBtnSelector: 'a[data-edit],button[data-edit],input[type=button][data-edit]',
                 actionBtnSelector: 'a[data-action],button[data-action],input[type=button][data-action]',
@@ -30,10 +31,13 @@ console.log('01-toolbar.js');
             codeview: function () {
                 var mk = this.mk;
                 if (mk.activeView === mk.editor) {
-                    this.mk.switchView(this.mk.codeview);
+                    mk.switchView(mk.codeview);
                 } else {
-                    this.mk.switchView(this.mk.editor);
+                    mk.switchView(mk.editor);
                 }
+            },
+            fullscreen: function () {
+                this.mk.toggleFullscreen(!mk.fullscreen);
             },
         },
 
@@ -82,16 +86,41 @@ console.log('01-toolbar.js');
             switchView: function (toView) {
                 var mk = this.mk,
                     options = this.options.toolbar,
+                    activeClass = options.activeClass,
+                    disabledClass = options.disabledClass,
                     $codeviewBtn = $('[' + options.actionKey + '=codeview]', this),
                     $enableBtn = $(options.enableOnCodeviewSelector, this);
 
                 if (toView === mk.codeview) {
-                    $codeviewBtn.addClass(options.activeClass);
-                    $('.btn', this).addClass('disabled');
-                    $enableBtn.removeClass('disabled');
+                    $codeviewBtn.addClass(activeClass);
+                    $('.btn', this).addClass(disabledClass);
+                    $enableBtn.removeClass(disabledClass);
                 } else {
-                    $codeviewBtn.removeClass(options.activeClass);
-                    $('.btn', this).removeClass('disabled');
+                    $codeviewBtn.removeClass(activeClass);
+                    $('.btn', this).removeClass(disabledClass);
+                }
+            },
+            resetFullscreenWrapperTop: function () {
+                var mk = this.mk;
+                setTimeout(function () {
+                    mk.wrapper.css({
+                      'top': mk.toolbar.outerHeight(),
+                    });
+                });
+            },
+            toggleFullscreen: function (fullscreen) {
+                var mk = this.mk,
+                    options = this.options.toolbar,
+                    $fullscreenBtn = $('['+ options.actionKey+'=fullscreen]', this);
+
+                mk.toolbar.toggleClass('mk-toolbar-float', fullscreen);
+                $fullscreenBtn.toggleClass(options.activeClass, fullscreen);
+
+                /* Set top space for toolbar */
+                if (fullscreen) {
+                    setTimeout(this.resetFullscreenWrapperTop);
+                } else {
+                    mk.wrapper.css({ 'top': '' });
                 }
             },
         },
@@ -105,6 +134,9 @@ console.log('01-toolbar.js');
         this.processAction = fn.processAction;
         this.update = fn.update;
         this.switchView = fn.switchView;
+        this.toggleFullscreen = fn.toggleFullscreen;
+        this.resetFullscreenWrapperTop = fn.resetFullscreenWrapperTop;
+        this.addClass('mk-toolbar');
         return this;
     };
 
@@ -134,7 +166,7 @@ console.log('01-toolbar.js');
             toolbar.update();
         });
 
-        /* Monkey on command execute */
+        /* Monkey events */
         this.$.on('monkey:execCommand', function() {
             toolbar.update();
         });
@@ -142,6 +174,13 @@ console.log('01-toolbar.js');
         this.$.on('monkey:afterViewSwitch', function (e) {
             toolbar.switchView(e.toView);
         });
+
+        this.$.on('monkey:toggleFullscreen', function (e) {
+            toolbar.toggleFullscreen(e.fullscreen);
+        });
+
+        /* Window events */
+        $(window).on('resize', toolbar.resetFullscreenWrapperTop);
     });
 
     // Translations
