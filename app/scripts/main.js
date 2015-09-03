@@ -19,11 +19,19 @@ console.log('main.js');
                 // Icon prefix
                 iconPrefix: 'glyphicon glyphicon-',
 
+                // Beautify-html options
+                beautifyHtml: {
+                  'indent_size': 2,
+                  'preserve_newlines': true,
+                },
+
             }, options);
 
+            /* Utilities */
             this.execCallbacks = monkey.fn.execCallbacks;
             this.extendOptions = monkey.fn.extendOptions;
             this.switchView= monkey.fn.switchView;
+            this.tidyHtml = monkey.fn.tidyHtml;
 
             /* Set translations */
             this.t = monkey.locales[this.options.locale];
@@ -87,6 +95,15 @@ console.log('main.js');
                     toView: toView,
                 });
             },
+            /* jshint ignore:start */
+            tidyHtml: function (code) {
+                if (window.html_beautify) {
+                    return window.html_beautify(code, this.options.beautifyHtml);
+                } else {
+                    return code;
+                }
+            },
+            /* jshint ignore:end */
         },
         bindings: {
         },
@@ -298,7 +315,8 @@ console.log('main.js');
                 if (e.toView === mk.codeview) {
                     mk.codeview.$.show();
                     if (!!mk.previousView) {
-                        mk.codeview.$.val(mk.previousView.code());
+                        var tidied = mk.tidyHtml(mk.previousView.code());
+                        mk.codeview.$.val(tidied);
                     }
                 }
             },
@@ -313,6 +331,8 @@ console.log('main.js');
         this.mk = new monkey.klass(this, options);
         this.data('monkey-editor', this.mk);
         this.data('options', this.mk.options);
+
+        this.mk.editor.$.html(this.val());
 
         /* Set default view */
         this.mk.switchView(this.mk.editor);
