@@ -12,6 +12,12 @@ console.log('00-div-selector.js');
             makeSelectionBox: function () {
                 return $('<div>').addClass('mk-selection-box hidden');
             },
+            makeToolbar: function () {
+                return $('<div class="mk-selection-box-tools">');
+            },
+            makeDeleteButton: function () {
+                return $('<a href="javascript:;" class="btn btn-xs btn-danger"><span class="fa fa-trash"></span></a>');
+            },
         },
         klass: function(monkeyEditor) {
             var fn = monkey.divSelector.fn;
@@ -19,14 +25,19 @@ console.log('00-div-selector.js');
             this.options = monkeyEditor.options;
             this.target = null;
             this.makeSelectionBox = monkey.divSelector.views.makeSelectionBox;
+            this.makeDeleteButton = monkey.divSelector.views.makeDeleteButton;
+            this.makeToolbar = monkey.divSelector.views.makeToolbar;
             this.replaceSelectionBox = fn.replaceSelectionBox;
             this.toggleSelectionBox = fn.toggleSelectionBox;
             this.editor = monkeyEditor.editor;
             this.moveSelectionBox = fn.moveSelectionBox;
-            this.triggerSelect = fn.triggerSelect;
-            this.triggerUnselect = fn.triggerUnselect;
             this.removeTarget = fn.removeTarget;
             this.isSelected = fn.isSelected;
+
+            /* Select and unselect methods*/
+            this.triggerSelect = fn.triggerSelect;
+            this.triggerUnselect = fn.triggerUnselect;
+
             this.setSelectableTags = fn.setSelectableTags;
             this.setSelectableTags();
         },
@@ -67,10 +78,25 @@ console.log('00-div-selector.js');
                 });
             },
             replaceSelectionBox: function () {
+                var $box = this.editor.$.find('.mk-selection-box');
                 // Replace a new box if it was accidentally deleted
-                if (this.editor.$.find('.mk-selection-box').length === 0) {
+                if ($box.length === 0 || $('.mk-selection-box-tools', $box).length === 0) {
+                    $box.remove();
+                    var self = this;
                     this.$ = this.makeSelectionBox();
+                    this.$toolbar = this.makeToolbar();
+                    this.$deleteButton = this.makeDeleteButton();
+                    this.$toolbar.append(this.$deleteButton);
+                    this.$.append(this.$toolbar);
                     this.editor.$.append(this.$);
+
+                    /* Bindings */
+                    this.$deleteButton.on('click', function (e) {
+                        self.removeTarget(self.target);
+                        e.stopPropagation();
+                        e.preventDefault();
+                    });
+
                 }
             },
             isSelected: function() {
@@ -146,10 +172,8 @@ console.log('00-div-selector.js');
         // Bindings
         editor.$.on('keydown', monkey.divSelector.bindings.editorKeydown);
         editor.$.on('monkey:afterSelectDiv', function (e) {
-            setTimeout(function triggerSelectTimeout() {
-                divSelector.moveSelectionBox(e.selectTarget);
-                divSelector.toggleSelectionBox(true);
-            });
+            divSelector.moveSelectionBox(e.selectTarget);
+            divSelector.toggleSelectionBox(true);
         });
         editor.$.on('monkey:afterUnselectDiv', function () {
             divSelector.toggleSelectionBox(false);

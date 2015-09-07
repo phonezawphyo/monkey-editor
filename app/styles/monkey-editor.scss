@@ -38,6 +38,7 @@
   overflow: scroll;
 
   position: relative;
+  padding: 20px 8px;
 
   /* Selection hint */
   div,table {
@@ -54,11 +55,29 @@
   .mk-space {
     outline: none;
     background-color: rgba(0,0,0,0.15);
-    transform: scaleY(0.5);
-    min-height: 20px;
-    transition: transform 0.15s ease-out;
+    text-align: center;
+    height: 20px;
+    left: 0;
+    right: 0;
+    border-left: none;
+    transition: all 0.3s ease-out;
+    transform: scale3d(0.1,0.4,1);
+    border-radius: 20px;
+    cursor: pointer;
+
     &:hover {
+      outline: none;
       transform: none;
+      border-radius: 0;
+    }
+
+    &:before {
+      content: '+';
+      color: black;
+      font-weight: bold;
+      font-size: 19px;
+      line-height: 15px;
+      display: inline-block;
     }
   }
 
@@ -94,7 +113,35 @@
       background-size: 8px 8px;
       background-position: left top, right top, left bottom, right bottom;
     }
+
+    & > .mk-space {
+      pointer-events: initial;
+      position: absolute;
+
+      &.mk-space-top {
+        top: -21px;
+      }
+
+      &.mk-space-bottom {
+        bottom: -21px;
+      }
+    }
+
+    & > .mk-selection-box-tools {
+      position: absolute;
+      top: -21px;
+      right: 0;
+      pointer-events: initial;
+      outline: none !important;
+      border: none !important;
+      z-index: 10;
+
+      .btn {
+        line-height: 12px;
+      }
+    }
   }
+
 }
 
 .mk-resizable {

@@ -7,8 +7,8 @@ console.log('03-space-divs.js');
         hideDelay: 0,
 
         klass: function(monkeyEditor) {
-            this.monkeyEditor = monkeyEditor;
-            this.editor = this.monkeyEditor.editor;
+            this.mk = monkeyEditor;
+            this.editor = this.mk.editor;
             var spaceDivs = monkey.spaceDivs;
             this.top = spaceDivs.views.makeTop.call(this);
             this.bottom = spaceDivs.views.makeBottom.call(this);
@@ -30,18 +30,23 @@ console.log('03-space-divs.js');
             },
         },
         events: {
-            clickSpace: function () {
-                var $this = $(this);
-                var spaceDivs = $this.data('space-divs');
-                var isTop = $this.hasClass('mk-space-top');
-                $this.removeClass('mk-space mk-space-top mk-space-bottom');
-                $this.off('click');
+            clickSpace: function (e) {
+                var $this = $(this),
+                    spaceDivs = $this.data('space-divs'),
+                    $target = $(spaceDivs.target),
+                    $newDiv = $('<div>'),
+                    isTop = $this.hasClass('mk-space-top');
 
                 if (isTop) {
-                    spaceDivs.top = monkey.spaceDivs.views.makeTop();
+                    $target.before($newDiv);
                 } else {
-                    spaceDivs.bottom = monkey.spaceDivs.views.makeBottom();
+                    $target.after($newDiv);
                 }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                spaceDivs.mk.divSelector.triggerSelect($newDiv[0]);
             },
         },
         fn: {
@@ -80,15 +85,13 @@ console.log('03-space-divs.js');
                 this.bottom.on('click', monkey.spaceDivs.events.clickSpace);
             },
             moveToTarget: function(target) {
-                var self = this;
-                var move = function () {
-                    self.target = target;
-
-                    var $target = $(target);
-                    $target.before(self.top);
-                    $target.after(self.bottom);
-                    self.resetBindings();
-                };
+                var self = this,
+                    move = function () {
+                        self.target = target;
+                        self.mk.divSelector.$.append(self.top);
+                        self.mk.divSelector.$.append(self.bottom);
+                        self.resetBindings();
+                    };
 
                 if (!this.target) {
                     move();
@@ -127,7 +130,7 @@ console.log('03-space-divs.js');
         editor.$.data('space-divs', spaceDivs);
 
         // Bindings
-        editor.$.on('monkey:selectDiv', monkey.spaceDivs.bindings.editorSelectDiv);
+        editor.$.on('monkey:afterSelectDiv', monkey.spaceDivs.bindings.editorSelectDiv);
         editor.$.on('monkey:unselectDiv', monkey.spaceDivs.bindings.editorUnselectDiv);
 
         if (!!this.divSelector) {
