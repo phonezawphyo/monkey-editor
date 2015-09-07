@@ -48,7 +48,8 @@
                   </div>
 
                   <div class="btn-group btn-group-sm">
-                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-magic"></i><b class="caret"></b></a>
+                    <! Styles>
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-magic"></i> <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                       <li><a data-edit="formatBlock <div>">Normal</a></li>
                       <li><a data-edit="formatBlock <blockquote>"><blockquote>Blockquote</blockquote></a></li>
@@ -61,7 +62,7 @@
                     </ul>
                   </div>
                   <div class="btn-group btn-group-sm">
-                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-font"></i> <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                       <li><a data-edit="fontName Serif" style="font-family:'Serif'">Serif</a></li>
                       <li><a data-edit="fontName Sans" style="font-family:'Sans'">Sans</a></li>
@@ -80,7 +81,7 @@
                       <li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
                   </div>
                   <div class="btn-group btn-group-sm">
-                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font Size"><span class="fa fa-text-height"></span>&nbsp;<b class="caret"></b></a>
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font Size"><span class="fa fa-text-height"></span> <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                       <li><a data-edit="fontSize 7">14px</a></li>
                       <li><a data-edit="fontSize 6">13px</a></li>
@@ -114,6 +115,15 @@
                     </div>
                     <a class="btn btn-default" data-edit="unlink" data-toggle=tooltip data-placement=bottom title="Remove Hyperlink"><i class="fa fa-scissors"></i></a>
 
+                  </div>
+
+                  <div class="btn-group btn-group-sm">
+                    <! Table >
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-table"></i> <i class=" fa fa-caret-down"></i></a>
+                    <ul class="dropdown-menu">
+                      <li data-monkey-table-picker>
+                      </li>
+                    </ul>
                   </div>
 
                   <div class="btn-group btn-group-sm">
@@ -189,6 +199,7 @@
           <script src="scripts/00-div-selector.js"></script>
           <script src="scripts/01-toolbar.js"></script>
           <script src="scripts/02-space-divs.js"></script>
+          <script src="scripts/03-toolbar-helpers.js"></script>
           <!-- endbuild -->
         </body>
       </html>

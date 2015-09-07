@@ -17,14 +17,9 @@ console.log('01-toolbar.js');
                 actionBtnSelector: 'a[data-action],button[data-action],input[type=button][data-action]',
             },
         },
-        tools: {
-            bold: function () {
-                return {
-                    icon: 'bold',
-                    title: this.t.toolbar.bold,
-                    edit: 'bold',
-                };
-            },
+
+        callbacks: {
+            beforeInitialize: [],
         },
 
         actions: {
@@ -45,8 +40,15 @@ console.log('01-toolbar.js');
             btnClick: function () {
                 var mk = $(this).data('monkey-editor'),
                     command = $(this).attr(mk.options.toolbar.commandKey),
-                    action = $(this).attr(mk.options.toolbar.actionKey),
-                    editor = mk.editor;
+                    action = $(this).attr(mk.options.toolbar.actionKey);
+
+                mk.toolbar.processCommandOrAction(command,action);
+            },
+        },
+
+        fn: {
+            processCommandOrAction: function (command,action) {
+                var editor = this.mk.editor;
 
                 editor.restoreSelection();
                 editor.$.focus();
@@ -55,14 +57,11 @@ console.log('01-toolbar.js');
                     editor.execCommand(command);
                 }
                 if (!!action) {
-                    mk.toolbar.processAction(action);
+                    this.processAction(action);
                 }
 
                 editor.saveSelection();
             },
-        },
-
-        fn: {
             processAction: function (action) {
                 monkey.toolbar.actions[action].call(this);
                 this.mk.$.trigger({
@@ -136,12 +135,16 @@ console.log('01-toolbar.js');
         this.switchView = fn.switchView;
         this.toggleFullscreen = fn.toggleFullscreen;
         this.resetFullscreenWrapperTop = fn.resetFullscreenWrapperTop;
+        this.processCommandOrAction = fn.processCommandOrAction;
         this.addClass('mk-toolbar');
         return this;
     };
 
     monkey.callbacks.afterInitialize.push(function objectBarAfterInitialize() {
         var editor = this.editor;
+
+        /* BeforeToolbarInitialize callback */
+        this.execCallbacks(monkey.toolbar.callbacks.beforeInitialize);
 
         /* Extend options */
         this.extendOptions(monkey.toolbar.options);

@@ -39,10 +39,12 @@
 
   position: relative;
 
-  div {
+  /* Selection hint */
+  div,table {
     min-height: 20px;
     border-left: 5px dotted rgba(0,0,0,0.1);
     outline: 1px dotted rgba(0,0,0,0.2);
+    border-collapse: separate;
 
     &:hover {
       outline: 1px dotted rgba(0,0,0,0.8);
@@ -151,3 +153,37 @@
 .btn-toolbar + .mk-editable {
   margin-top: 8px;
 } 
+.mk-table-picker {
+  padding: 0 8px;
+  table {
+    margin: 0;
+    tr {
+      cursor: pointer;
+
+      & > td {
+        width: 10%;
+        padding: 0;
+        line-height: 13px;
+        text-align: center;
+        vertical-align: middle;
+
+        & > a {
+          display: block;
+          width: 100%;
+          height: 100%;
+          font-size: 10px;
+          text-decoration: none;
+        }
+
+        &:hover {
+          background-color: rgba(0,0,0,0.1);
+        }
+      }
+    }
+  }
+}
+.mk-table-picker-status {
+  color: rgba(0,0,0,0.6);
+  padding: 4px 0 0;
+  font-size: 13px;
+}

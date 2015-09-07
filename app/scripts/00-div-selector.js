@@ -3,6 +3,11 @@ console.log('00-div-selector.js');
 (function($) {
     var monkey = window.monkey;
     monkey.divSelector = {
+        options: {
+            divSelector: {
+                selectableTags: 'div,table',
+            },
+        },
         views: {
             makeSelectionBox: function () {
                 return $('<div>').addClass('mk-selection-box hidden');
@@ -11,6 +16,7 @@ console.log('00-div-selector.js');
         klass: function(monkeyEditor) {
             var fn = monkey.divSelector.fn;
             this.monkeyEditor = monkeyEditor;
+            this.options = monkeyEditor.options;
             this.target = null;
             this.makeSelectionBox = monkey.divSelector.views.makeSelectionBox;
             this.replaceSelectionBox = fn.replaceSelectionBox;
@@ -21,8 +27,15 @@ console.log('00-div-selector.js');
             this.triggerUnselect = fn.triggerUnselect;
             this.removeTarget = fn.removeTarget;
             this.isSelected = fn.isSelected;
+            this.setSelectableTags = fn.setSelectableTags;
+            this.setSelectableTags();
         },
         fn: {
+            setSelectableTags: function () {
+                this.selectableTags = this.options.divSelector.selectableTags
+                .split(',')
+                .map(function(o) { return o.toUpperCase(); });
+            },
             toggleSelectionBox: function(show) {
                 if (!!this.$) {
                     this.$.toggleClass('hidden',!show);
@@ -109,7 +122,7 @@ console.log('00-div-selector.js');
                 var divSelector = $(this).data('div-selector');
 
                 if (target !== this) {
-                    if (target.tagName === 'DIV') {
+                    if (divSelector.selectableTags.indexOf(target.tagName) > -1) {
                         divSelector.triggerSelect(target);
                     }
                 } else {
@@ -120,8 +133,12 @@ console.log('00-div-selector.js');
     };
 
     monkey.callbacks.afterInitialize.push(function divSelectorAfterInitialize() {
-        var editor = this.editor,
-            divSelector = new monkey.divSelector.klass(this);
+        var editor = this.editor;
+
+        /* Extend options */
+        this.extendOptions(monkey.divSelector.options);
+
+        var divSelector = new monkey.divSelector.klass(this);
         this.divSelector = divSelector;
 
         editor.$.data('div-selector', divSelector);
