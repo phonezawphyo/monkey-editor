@@ -37,7 +37,7 @@ console.log('01-toolbar.js');
                 }
             },
             fullscreen: function () {
-                this.mk.toggleFullscreen(!mk.fullscreen);
+                this.mk.toggleFullscreen(!this.mk.fullscreen);
             },
         },
 
@@ -103,8 +103,8 @@ console.log('01-toolbar.js');
             resetFullscreenWrapperTop: function () {
                 var mk = this.mk;
                 setTimeout(function () {
-                    mk.wrapper.css({
-                      'top': mk.toolbar.outerHeight(),
+                    mk.wrapper.$.css({
+                        'top': mk.toolbar.outerHeight(),
                     });
                 });
             },
@@ -120,7 +120,7 @@ console.log('01-toolbar.js');
                 if (fullscreen) {
                     setTimeout(this.resetFullscreenWrapperTop);
                 } else {
-                    mk.wrapper.css({ 'top': '' });
+                    mk.wrapper.$.css({ 'top': '' });
                 }
             },
         },
