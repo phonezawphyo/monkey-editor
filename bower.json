@@ -4,7 +4,9 @@
   "dependencies": {
     "bootstrap-sass-official": "~3.1.0",
     "fontawesome": "~4.4.0",
-    "jquery": "~1.11.0"
+    "jquery": "~2.1.4",
+
+    "js-beautify":""
   },
   "devDependencies": {}
 }
