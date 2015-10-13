@@ -61,6 +61,7 @@
                       <li><a data-edit="formatBlock <h6>"><h6>H6</h6></a></li>
                     </ul>
                   </div>
+                  <! Font families >
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-font"></i> <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
@@ -80,14 +81,26 @@
                       <li><a data-edit="fontName Times New Roman" style="font-family:'Times New Roman'">Times New Roman</a></li>
                       <li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
                   </div>
+                  <! Font sizes >
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font Size"><span class="fa fa-text-height"></span> <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
-                      <li><a data-edit="fontSize 7">14px</a></li>
-                      <li><a data-edit="fontSize 6">13px</a></li>
-                      <li><a data-edit="fontSize 5">12px</a></li>
+                      <li class="with-padding">
+                        <div class="input-group">
+                            <input type="number" class="form-control" style="text-align: right;" data-action="fontSize %{value}px">
+                          <span class="input-group-addon">px</span>
+                        </div>
+                      </li>
+                      <li><a data-action="fontSize 9px">9px</a></li>
+                      <li><a data-action="fontSize 10px">10px</a></li>
+                      <li><a data-action="fontSize 11px">11px</a></li>
+                      <li><a data-action="fontSize 12px">12px</a></li>
+                      <li><a data-action="fontSize 13px">13px</a></li>
+                      <li><a data-action="fontSize 14px">14px</a></li>
+                      <li><a data-action="fontSize 15px">15px</a></li>
                     </ul>
                   </div>
+                  <! General formatters >
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-default" data-edit="bold" data-toggle=tooltip data-placement=bottom title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
                     <a class="btn btn-default" data-edit="italic" data-toggle=tooltip data-placement=bottom title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
@@ -107,13 +120,15 @@
                     <a class="btn btn-default" data-edit="justifyright" data-toggle=tooltip data-placement=bottom title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
                     <a class="btn btn-default" data-edit="justifyfull" data-toggle=tooltip data-placement=bottom title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
                   </div>
+                  <! Link >
                   <div class="btn-group btn-group-sm">
-                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Hyperlink"><i class="fa fa-link"></i></a>
-                    <div class="dropdown-menu input-append">
-                      <input class="span2" placeholder="URL" type="text" data-edit="createLink">
-                      <button class="btn btn-default" type="button">Add</button>
-                    </div>
-                    <a class="btn btn-default" data-edit="unlink" data-toggle=tooltip data-placement=bottom title="Remove Hyperlink"><i class="fa fa-scissors"></i></a>
+                    <a class="btn btn-default" data-edit="unlink" data-toggle=tooltip data-placement=bottom title="Remove Hyperlink"><i class="fa fa-chain-broken"></i></a>
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-placement=bottom title="Hyperlink"><i class="fa fa-link"></i></a>
+                    <ul class="dropdown-menu">
+                      <li class="with-padding">
+                        <input type="text" class="form-control" placeholder="URL" data-edit="createLink %{value}">
+                      </li>
+                    </ul>
 
                   </div>
 

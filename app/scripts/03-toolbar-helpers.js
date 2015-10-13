@@ -24,6 +24,7 @@ console.log('03-toolbar-helpers.js');
                 return $table;
             };
 
+            /* Tabke picker */
             $('[data-monkey-table-picker]').each(function() {
                 var $this = $(this),
                     $table = makeTable(10,10, true),

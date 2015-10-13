@@ -193,6 +193,13 @@
   cursor: pointer;
 }
 
+.dropdown-menu > li.with-padding {
+  padding: 8px;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .btn-group {
   margin-bottom: 8px;
 }

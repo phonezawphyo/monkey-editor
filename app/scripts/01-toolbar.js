@@ -14,6 +14,7 @@ console.log('01-toolbar.js');
                 disabledClass: 'disabled',
                 enableOnCodeviewSelector: '[data-enable-codeview]',
                 commandBtnSelector: 'a[data-edit],button[data-edit],input[type=button][data-edit]',
+                commandInputSelector: 'input[type=text],input[type=number]',
                 actionBtnSelector: 'a[data-action],button[data-action],input[type=button][data-action]',
             },
         },
@@ -34,15 +35,80 @@ console.log('01-toolbar.js');
             fullscreen: function () {
                 this.mk.toggleFullscreen(!this.mk.fullscreen);
             },
+            fontSize: function (size) {
+                var sel= window.getSelection(),
+                    text = sel.toString(),
+                    rng = sel.getRangeAt(0),
+                    parent = rng.commonAncestorContainer;
+
+                if (parent.nodeType !== 1) {
+                    parent = parent.parentNode;
+                }
+
+                if (!sel.isCollapsed) {
+                    var $parent = $(parent);
+                    if ($parent.text().trim() === text.trim()) {
+                        $parent.css({
+                            'font-size': size,
+                        });
+                        $parent.children('span').each(function() {
+                            var $this = $(this);
+                            $this.css({'font-size': ''});
+                            if ($this.styles.length === 0) {
+                                $this.after($this.contents());
+                                $this.remove();
+                            }
+                        });
+                    } else {
+                        var $span = $('<span>')
+                        .append(text)
+                        .css({'font-size': size});
+
+                        rng.deleteContents();
+                        rng.insertNode($span[0]);
+                    }
+                }
+            },
         },
 
         bindings: {
             btnClick: function () {
-                var mk = $(this).data('monkey-editor'),
-                    command = $(this).attr(mk.options.toolbar.commandKey),
-                    action = $(this).attr(mk.options.toolbar.actionKey);
+                var $this = $(this),
+                    mk = $this.data('monkey-editor'),
+                    command = $this.attr(mk.options.toolbar.commandKey),
+                    action = $this.attr(mk.options.toolbar.actionKey);
 
                 mk.toolbar.processCommandOrAction(command,action);
+            },
+            inputClick: function(e) {
+                e.preventDefault();
+                return false;
+            },
+            inputFocus: function() {
+            },
+            inputBlur: function() {
+                var $this = $(this),
+                    mk = $this.data('monkey-editor'),
+                    editor = mk.editor;
+                editor.restoreSelection();
+            },
+            inputKeydown: function(e) {
+                var $this = $(this),
+                    mk = $this.data('monkey-editor'),
+                    command = $this.attr(mk.options.toolbar.commandKey),
+                    action = $this.attr(mk.options.toolbar.actionKey);
+
+                /* Return key */
+                if (e.keyCode === 13) {
+                    if (!!command) {
+                        command = command.replace(/%{value}/,$this.val());
+                    }
+                    if (!!action) {
+                        action = action.replace(/%{value}/,$this.val());
+                    }
+                    mk.toolbar.processCommandOrAction(command, action);
+                    e.preventDefault();
+                }
             },
         },
 
@@ -62,8 +128,12 @@ console.log('01-toolbar.js');
 
                 editor.saveSelection();
             },
-            processAction: function (action) {
-                monkey.toolbar.actions[action].call(this);
+            processAction: function (actionAndArgs) {
+                var arr = actionAndArgs.split(' '),
+                    action = arr.shift();
+
+                monkey.toolbar.actions[action].apply(this, arr);
+
                 this.mk.$.trigger({
                     type: 'monkey:execAction',
                     action: action,
@@ -157,6 +227,14 @@ console.log('01-toolbar.js');
         this.toolbar.find(this.options.toolbar.commandBtnSelector)
         .data('monkey-editor', this)
         .click(monkey.toolbar.bindings.btnClick);
+       
+        // Text inputs
+        this.toolbar.find(this.options.toolbar.commandInputSelector)
+        .data('monkey-editor', this)
+        .click(monkey.toolbar.bindings.inputClick)
+        .focus(monkey.toolbar.bindings.inputFocus)
+        .blur(monkey.toolbar.bindings.inputBlur)
+        .keydown(monkey.toolbar.bindings.inputKeydown);
 
         // Action buttons
         this.toolbar.find(this.options.toolbar.actionBtnSelector)
