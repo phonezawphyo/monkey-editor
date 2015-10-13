@@ -2,9 +2,21 @@
 console.log('03-toolbar-helpers.js');
 (function($) {
     var monkey = window.monkey;
-    
+
+    monkey.toolbar = $.extend(true, {
+
+    }, (monkey.toolbar || {}));
 
     monkey.toolbarHelpers = {
+        imageInserter: function () {
+            //var mk = this;
+
+            $('[data-monkey-image-inserter]')
+            .attr('data-monkey-image-inserter', null)
+            .each(function() {
+                //var $this = $(this);
+            });
+        },
         tablePicker: function () {
             var mk = this,
                 makeTable = function (row,col, hasData) {
@@ -25,12 +37,13 @@ console.log('03-toolbar-helpers.js');
             };
 
             /* Tabke picker */
-            $('[data-monkey-table-picker]').each(function() {
+            $('[data-monkey-table-picker]')
+            .attr('data-monkey-table-picker',null)
+            .each(function() {
                 var $this = $(this),
                     $table = makeTable(10,10, true),
                     $status = $('<div class="mk-table-picker-status">');
 
-                $this.attr('data-monkey-table-picker',null);
 
                 $this.addClass('mk-table-picker').append($table).append($status);
 

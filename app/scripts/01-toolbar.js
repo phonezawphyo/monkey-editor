@@ -15,6 +15,7 @@ console.log('01-toolbar.js');
                 enableOnCodeviewSelector: '[data-enable-codeview]',
                 commandBtnSelector: 'a[data-edit],button[data-edit],input[type=button][data-edit]',
                 commandInputSelector: 'input[type=text],input[type=number]',
+                fileSelector: 'input[type=file]',
                 actionBtnSelector: 'a[data-action],button[data-action],input[type=button][data-action]',
             },
         },
@@ -31,6 +32,14 @@ console.log('01-toolbar.js');
                 } else {
                     mk.switchView(mk.editor);
                 }
+            },
+            setCss: function (cssStr) {
+                var mk = this.mk,
+                    target = mk.divSelector.lastSelectedTarget;
+
+                $(mk.divSelector.lastSelectedTarget).css(JSON.parse(cssStr));
+
+                mk.divSelector.triggerSelect(target);
             },
             fullscreen: function () {
                 this.mk.toggleFullscreen(!this.mk.fullscreen);
@@ -110,6 +119,16 @@ console.log('01-toolbar.js');
                     e.preventDefault();
                 }
             },
+            fileChange: function() {
+                var $this = $(this),
+                    mk = $this.data('monkey-editor');
+                    //command = $this.attr(mk.options.toolbar.commandKey),
+                    //action = $this.attr(mk.options.toolbar.actionKey);
+                if (this.type === 'file' && this.files && this.files.length > 0) {
+                    mk.toolbar.insertFiles(this.files);
+                    $(this).val('');
+                }
+            },
         },
 
         fn: {
@@ -144,11 +163,7 @@ console.log('01-toolbar.js');
                 if (options.activeClass) {
                     $(options.selector).find(options.commandBtnSelector).each(function () {
                         var command = $(this).attr(options.commandKey);
-                        if (document.queryCommandState(command)) {
-                            $(this).addClass(options.activeClass);
-                        } else {
-                            $(this).removeClass(options.activeClass);
-                        }
+                        $(this).toggleClass(options.activeClass, document.queryCommandState(command));
                     });
                 }
             },
@@ -192,6 +207,35 @@ console.log('01-toolbar.js');
                     mk.wrapper.$.css({ 'top': '' });
                 }
             },
+            convertFileIntoUrl: function (fileInfo) {
+                var loader = $.Deferred(),
+                    fReader = new FileReader();
+
+                fReader.onload = function (e) {
+                    loader.resolve(e.target.result);
+                };
+                fReader.onerror = loader.reject;
+                fReader.onprogress = loader.notify;
+                fReader.readAsDataURL(fileInfo);
+                return loader.promise();
+            },
+
+            insertFiles: function (files) {
+                var mk = this.mk,
+                    editor = mk.editor;
+                $.each(files, function (idx, fileInfo) {
+                    if (/^image\//.test(fileInfo.type)) {
+                        $.when(monkey.toolbar.fn.convertFileIntoUrl(fileInfo))
+                        .done(function (dataUrl) {
+                            editor.execCommand('insertImage ' + dataUrl);
+                        }).fail(function () {
+                            //options.fileUploadError("file-reader", e);
+                        });
+                    } else {
+                        //options.fileUploadError("unsupported-file-type", fileInfo.type);
+                    }
+                });
+            },
         },
     };
 
@@ -206,6 +250,7 @@ console.log('01-toolbar.js');
         this.toggleFullscreen = fn.toggleFullscreen;
         this.resetFullscreenWrapperTop = fn.resetFullscreenWrapperTop;
         this.processCommandOrAction = fn.processCommandOrAction;
+        this.insertFiles = fn.insertFiles;
         this.addClass('mk-toolbar');
         return this;
     };
@@ -235,6 +280,11 @@ console.log('01-toolbar.js');
         .focus(monkey.toolbar.bindings.inputFocus)
         .blur(monkey.toolbar.bindings.inputBlur)
         .keydown(monkey.toolbar.bindings.inputKeydown);
+
+        // File inputs
+        this.toolbar.find(this.options.toolbar.fileSelector)
+        .data('monkey-editor', this)
+        .change(monkey.toolbar.bindings.fileChange);
 
         // Action buttons
         this.toolbar.find(this.options.toolbar.actionBtnSelector)

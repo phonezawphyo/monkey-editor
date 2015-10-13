@@ -2,12 +2,12 @@
   transition: all 0.3s ease-out;
 }
 
-.mk-toolbar-float {
+.mk-toolbar-float:not(.no-float) {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1069;
+  z-index: 1039;
   padding: 8px;
   background-color: rgba(0,0,0,0.85);
 }
@@ -17,7 +17,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1068;
+  z-index: 1038;
   height: auto !important;
 
   .mk-editable, .mk-codeview {
@@ -41,7 +41,7 @@
   padding: 20px 8px;
 
   /* Selection hint */
-  div,table {
+  div,table,img {
     min-height: 20px;
     border-left: 5px dotted rgba(0,0,0,0.1);
     outline: 1px dotted rgba(0,0,0,0.2);
@@ -207,6 +207,9 @@
 .btn-toolbar + .mk-editable {
   margin-top: 8px;
 } 
+.btn input[type=file] {
+  cursor: pointer;
+}
 .mk-table-picker {
   padding: 0 8px;
   table {
@@ -241,3 +244,4 @@
   padding: 4px 0 0;
   font-size: 13px;
 }
+

@@ -5,7 +5,7 @@ console.log('00-div-selector.js');
     monkey.divSelector = {
         options: {
             divSelector: {
-                selectableTags: 'div,table',
+                selectableTags: 'div,table,img',
             },
         },
         views: {
@@ -18,6 +18,9 @@ console.log('00-div-selector.js');
             makeDeleteButton: function () {
                 return $('<a href="javascript:;" class="btn btn-xs btn-danger"><span class="fa fa-trash"></span></a>');
             },
+            makeSettingButton: function () {
+                return $('<a href="javascript:;" class="btn btn-xs btn-default"><span class="fa fa-cog"></span></a>');
+            },
         },
         klass: function(monkeyEditor) {
             var fn = monkey.divSelector.fn;
@@ -26,6 +29,7 @@ console.log('00-div-selector.js');
             this.target = null;
             this.makeSelectionBox = monkey.divSelector.views.makeSelectionBox;
             this.makeDeleteButton = monkey.divSelector.views.makeDeleteButton;
+            this.makeSettingButton = monkey.divSelector.views.makeSettingButton;
             this.makeToolbar = monkey.divSelector.views.makeToolbar;
             this.replaceSelectionBox = fn.replaceSelectionBox;
             this.toggleSelectionBox = fn.toggleSelectionBox;
@@ -82,11 +86,13 @@ console.log('00-div-selector.js');
                 // Replace a new box if it was accidentally deleted
                 if ($box.length === 0 || $('.mk-selection-box-tools', $box).length === 0) {
                     $box.remove();
-                    var self = this;
+                    var self = this,
+                        options = this.monkeyEditor.options;
                     this.$ = this.makeSelectionBox();
                     this.$toolbar = this.makeToolbar();
                     this.$deleteButton = this.makeDeleteButton();
-                    this.$toolbar.append(this.$deleteButton);
+                    this.$settingButton = this.makeSettingButton();
+                    this.$toolbar.append(this.$deleteButton)
                     this.$.append(this.$toolbar);
                     this.editor.$.append(this.$);
 
@@ -95,7 +101,20 @@ console.log('00-div-selector.js');
                         self.removeTarget(self.target);
                         e.stopPropagation();
                         e.preventDefault();
+                        return false;
                     });
+
+                    if (!!options.modal && !!options.modal.settingsModalSelector) {
+                        this.$toolbar.append(this.$settingButton);
+                        this.$settingButton.on('click', function (e) {
+                            $(options.modal.settingsModalSelector).data({
+                                selection: self.target,
+                            }).modal('show');
+                            e.stopPropagation();
+                            e.preventDefault();
+                            return false;
+                        });
+                    }
 
                 }
             },
@@ -114,6 +133,9 @@ console.log('00-div-selector.js');
                 });
             },
             triggerUnselect: function () {
+                if (!!this.target) {
+                    this.lastSelectedTarget = this.target;
+                }
                 this.target = null;
                 this.editor.$.trigger({
                     type: 'monkey:unselectDiv',
