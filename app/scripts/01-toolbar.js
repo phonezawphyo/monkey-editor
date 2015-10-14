@@ -1,6 +1,10 @@
 'use strict';
 console.log('01-toolbar.js');
 (function() {
+    String.prototype.parseValue = function(value) {
+        return this.replace(/%{value}/,value);
+    };
+
     var monkey = window.monkey;
 
     // Set toolbars to be displayed
@@ -14,7 +18,8 @@ console.log('01-toolbar.js');
                 disabledClass: 'disabled',
                 enableOnCodeviewSelector: '[data-enable-codeview]',
                 commandBtnSelector: 'a[data-edit],button[data-edit],input[type=button][data-edit]',
-                commandInputSelector: 'input[type=text],input[type=number]',
+                keydownTriggerInputSelector: 'input[type=text],input[type=number]',
+                changeTriggerInputSelector: 'input[type=color]',
                 fileSelector: 'input[type=file]',
                 actionBtnSelector: 'a[data-action],button[data-action],input[type=button][data-action]',
             },
@@ -101,6 +106,20 @@ console.log('01-toolbar.js');
                     editor = mk.editor;
                 editor.restoreSelection();
             },
+            inputChange: function(e) {
+                var $this = $(this),
+                    mk = $this.data('monkey-editor'),
+                    command = $this.attr(mk.options.toolbar.commandKey),
+                    action = $this.attr(mk.options.toolbar.actionKey);
+
+                if (!!command) {
+                    command = command.parseValue($this.val());
+                }
+                if (!!action) {
+                    action = action.parseValue($this.val());
+                }
+                mk.toolbar.processCommandOrAction(command, action);
+            },
             inputKeydown: function(e) {
                 var $this = $(this),
                     mk = $this.data('monkey-editor'),
@@ -110,10 +129,10 @@ console.log('01-toolbar.js');
                 /* Return key */
                 if (e.keyCode === 13) {
                     if (!!command) {
-                        command = command.replace(/%{value}/,$this.val());
+                        command = command.parseValue($this.val());
                     }
                     if (!!action) {
-                        action = action.replace(/%{value}/,$this.val());
+                        action = action.parseValue($this.val());
                     }
                     mk.toolbar.processCommandOrAction(command, action);
                     e.preventDefault();
@@ -151,6 +170,7 @@ console.log('01-toolbar.js');
                 var arr = actionAndArgs.split(' '),
                     action = arr.shift();
 
+                    console.log("action", action);
                 monkey.toolbar.actions[action].apply(this, arr);
 
                 this.mk.$.trigger({
@@ -274,12 +294,21 @@ console.log('01-toolbar.js');
         .click(monkey.toolbar.bindings.btnClick);
        
         // Text inputs
-        this.toolbar.find(this.options.toolbar.commandInputSelector)
+        this.toolbar.find(this.options.toolbar.keydownTriggerInputSelector)
         .data('monkey-editor', this)
         .click(monkey.toolbar.bindings.inputClick)
         .focus(monkey.toolbar.bindings.inputFocus)
         .blur(monkey.toolbar.bindings.inputBlur)
         .keydown(monkey.toolbar.bindings.inputKeydown);
+
+        // Change trigger inputs
+        this.toolbar.find(this.options.toolbar.changeTriggerInputSelector)
+        .data('monkey-editor', this)
+        .click(monkey.toolbar.bindings.inputClick)
+        .focus(monkey.toolbar.bindings.inputFocus)
+        .blur(monkey.toolbar.bindings.inputBlur)
+        .change(monkey.toolbar.bindings.inputChange);
+
 
         // File inputs
         this.toolbar.find(this.options.toolbar.fileSelector)
