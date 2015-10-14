@@ -107,9 +107,7 @@ console.log('00-div-selector.js');
                     if (!!options.modal && !!options.modal.settingsModalSelector) {
                         this.$toolbar.append(this.$settingButton);
                         this.$settingButton.on('click', function (e) {
-                            $(options.modal.settingsModalSelector).data({
-                                selection: self.target,
-                            }).modal('show');
+                            $(options.modal.settingsModalSelector).modal('show');
                             e.stopPropagation();
                             e.preventDefault();
                             return false;
