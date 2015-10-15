@@ -415,7 +415,6 @@ console.log('main.js');
             viewport: 'body',
         });
 
-        console.log(this);
         window.mk = this.mk;
 
         return this;

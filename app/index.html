@@ -123,9 +123,9 @@
                   <! Color picker >
                   <div class="btn-group btn-group-sm">
                     <! Font color >
-                    <button class="btn btn-default colorpicker colorpicker-forecolor" data-colorpicker type=button value="#ffffff" data-edit="foreColor %{value}" data-toggle=tooltip title="Font color"/><span class="fa fa-font"></span></button>
+                    <button class="btn btn-default colorpicker colorpicker-forecolor" data-colorpicker=fore type=button value="#ffffff" data-edit="foreColor %{value}" data-toggle=tooltip title="Font color"/><span class="fa fa-font"></span></button>
                     <! Highlight color >
-                    <button class="btn btn-default colorpicker colorpicker-backcolor" data-colorpicker type=button value="#ffffff" data-edit="backColor %{value}" data-toggle=tooltip title="Highlight color"><span class="highlighter"><span class="fa fa-font"></span></span></button>
+                    <button class="btn btn-default colorpicker colorpicker-backcolor" data-colorpicker=back type=button value="#ffffff" data-edit="backColor %{value}" data-toggle=tooltip title="Highlight color"><span class="highlighter"><span class="fa fa-font"></span></span></button>
                   </div>
                   <! Link >
                   <div class="btn-group btn-group-sm">
@@ -209,6 +209,18 @@
                               <a class="btn btn-default" data-action='setCss {"height":"100%"}' data-toggle=tooltip data-placement=bottom title="Set height to 100%">100%</a>
                             </div>
                             <input type=text placeholder="Custom height" class="form-control input-sm" style="width:100px;" data-action='setCss {"height":"%{value}"}'>
+                          </div>
+                          <! Color >
+                          <h5>Background color</h5>
+                          <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
+                            <div class="btn-group btn-group-sm">
+                              <! Clear colors >
+                              <a class="btn btn-default" data-action='setCss {"background-color":"","border-color":""}' data-toggle=tooltip data-placement=bottom title="Clear all color"><span class="fa fa-times"></span></a>
+                              <! Background color >
+                              <button class="btn btn-default colorpicker colorpicker-backcolor" data-colorpicker="selection-back" type=button value="#ffffff" data-action='setCss {"background-color":"%{value}"}' data-toggle=tooltip title="Selection background color"/><span class="highlighter">&nbsp;&nbsp;&nbsp;</span></button>
+                              <! Border color >
+                              <button class="btn btn-default colorpicker colorpicker-bordercolor" data-colorpicker="selection-border" type=button value="#ffffff" data-action='setCss {"border-color":"%{value}"}' data-toggle=tooltip title="Selection border color"/><span class="highlighter">&nbsp;&nbsp;&nbsp;</span></button>
+                            </div>
                           </div>
                         </div>
                         <!--

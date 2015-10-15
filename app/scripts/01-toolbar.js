@@ -38,6 +38,7 @@ console.log('01-toolbar.js');
                     mk.switchView(mk.editor);
                 }
             },
+
             setCss: function (cssStr) {
                 var mk = this.mk,
                     target = mk.divSelector.lastSelectedTarget;
@@ -187,8 +188,8 @@ console.log('01-toolbar.js');
                 }
                 $(options.selector).find(options.changeTriggerInputSelector).each(function () {
                     var command = $(this).attr(options.commandKey),
-                        command = command.split(' ')[0],
-                        newValue = document.queryCommandValue(command);
+                        keyword = !!command ? command.split(' ') : null,
+                        newValue = !!keyword ? document.queryCommandValue(keyword[0]) : null;
                     $(this).val(newValue);
                     $(this).trigger({
                         type: 'monkey:valueUpdated',
@@ -317,7 +318,6 @@ console.log('01-toolbar.js');
         .focus(monkey.toolbar.bindings.inputFocus)
         .blur(monkey.toolbar.bindings.inputBlur)
         .change(monkey.toolbar.bindings.inputChange);
-
 
         // File inputs
         this.toolbar.find(this.options.toolbar.fileSelector)

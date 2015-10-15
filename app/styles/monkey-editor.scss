@@ -246,10 +246,12 @@
   font-size: 13px;
 }
 
-.colorpicker {
+[data-colorpicker]{
   text-shadow: 0 0 1px rgba(0,0,0,0.6);
 }
-.colorpicker-backcolor {
+[data-colorpicker=back],
+[data-colorpicker=selection-back],
+[data-colorpicker=selection-border] {
   .highlighter {
     border: 1px solid black;
   }
