@@ -232,6 +232,7 @@ console.log('main.js');
                     args = $(args).attr({ 'data-monkey-id': insertId })[0].outerHTML;
                 }
 
+                document.execCommand('styleWithCSS', false, true);
                 document.execCommand(command, 0, args);
 
                 this.mk.$.trigger({
@@ -430,25 +431,5 @@ console.log('main.js');
             };
             $this.monkeyEditor(options);
         });
-    });
-
-    $("#colorpicker").spectrum({
-        preferredFormat: "hex",
-        showInput: true,
-        showInitial: true,
-        showAlpha: true,
-        localStorageKey: "colorpicker",
-        showPalette: true,
-        showSelectionPalette: true,
-        palette: [],
-        allowEmpty: false,
-        showButtons: true,
-        appendTo: "body",
-        chooseText: "Pick",
-        cancelText: "Cancel",
-        replacerClassName: "btn btn-default",
-    })
-    .change(function() {
-        console.log($(this).val());
     });
 })(jQuery);

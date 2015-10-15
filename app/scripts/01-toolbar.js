@@ -19,7 +19,7 @@ console.log('01-toolbar.js');
                 enableOnCodeviewSelector: '[data-enable-codeview]',
                 commandBtnSelector: 'a[data-edit],button[data-edit],input[type=button][data-edit]',
                 keydownTriggerInputSelector: 'input[type=text],input[type=number]',
-                changeTriggerInputSelector: 'input[type=color]',
+                changeTriggerInputSelector: 'input[type=color],[data-colorpicker]',
                 fileSelector: 'input[type=file]',
                 actionBtnSelector: 'a[data-action],button[data-action],input[type=button][data-action]',
             },
@@ -106,7 +106,7 @@ console.log('01-toolbar.js');
                     editor = mk.editor;
                 editor.restoreSelection();
             },
-            inputChange: function(e) {
+            inputChange: function() {
                 var $this = $(this),
                     mk = $this.data('monkey-editor'),
                     command = $this.attr(mk.options.toolbar.commandKey),
@@ -170,7 +170,6 @@ console.log('01-toolbar.js');
                 var arr = actionAndArgs.split(' '),
                     action = arr.shift();
 
-                    console.log("action", action);
                 monkey.toolbar.actions[action].apply(this, arr);
 
                 this.mk.$.trigger({
@@ -186,6 +185,16 @@ console.log('01-toolbar.js');
                         $(this).toggleClass(options.activeClass, document.queryCommandState(command));
                     });
                 }
+                $(options.selector).find(options.changeTriggerInputSelector).each(function () {
+                    var command = $(this).attr(options.commandKey),
+                        command = command.split(' ')[0],
+                        newValue = document.queryCommandValue(command);
+                    $(this).val(newValue);
+                    $(this).trigger({
+                        type: 'monkey:valueUpdated',
+                        newValue: newValue,
+                    });
+                });
             },
             switchView: function (toView) {
                 var mk = this.mk,

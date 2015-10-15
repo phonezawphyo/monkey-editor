@@ -122,7 +122,10 @@
                   </div>
                   <! Color picker >
                   <div class="btn-group btn-group-sm">
-                    <input class="btn btn-default" type=color id='colorpicker' value="#ffffff" data-edit="foreColor %{value}"/>
+                    <! Font color >
+                    <button class="btn btn-default colorpicker colorpicker-forecolor" data-colorpicker type=button value="#ffffff" data-edit="foreColor %{value}" data-toggle=tooltip title="Font color"/><span class="fa fa-font"></span></button>
+                    <! Highlight color >
+                    <button class="btn btn-default colorpicker colorpicker-backcolor" data-colorpicker type=button value="#ffffff" data-edit="backColor %{value}" data-toggle=tooltip title="Highlight color"><span class="highlighter"><span class="fa fa-font"></span></span></button>
                   </div>
                   <! Link >
                   <div class="btn-group btn-group-sm">
@@ -271,6 +274,7 @@
           <script src="scripts/02-space-divs.js"></script>
           <script src="scripts/03-toolbar-helpers.js"></script>
           <script src="scripts/04-modals.js"></script>
+          <script src="scripts/app.js"></script>
           <!-- endbuild -->
         </body>
       </html>

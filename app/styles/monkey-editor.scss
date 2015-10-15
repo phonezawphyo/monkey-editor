@@ -246,3 +246,11 @@
   font-size: 13px;
 }
 
+.colorpicker {
+  text-shadow: 0 0 1px rgba(0,0,0,0.6);
+}
+.colorpicker-backcolor {
+  .highlighter {
+    border: 1px solid black;
+  }
+}

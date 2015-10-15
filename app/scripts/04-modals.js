@@ -34,9 +34,9 @@ console.log('04-modals.js');
                 show: false,
             })
             .data('monkey-editor', this)
-            .on('show.bs.modal', function(e) {
+            .on('show.bs.modal', function() {
             })
-            .on('hide.bs.modal', function(e) {
+            .on('hide.bs.modal', function() {
                 var $this = $(this),
                     mk = $this.data('monkey-editor'),
                     selector = mk.divSelector;

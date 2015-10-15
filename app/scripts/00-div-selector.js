@@ -92,7 +92,7 @@ console.log('00-div-selector.js');
                     this.$toolbar = this.makeToolbar();
                     this.$deleteButton = this.makeDeleteButton();
                     this.$settingButton = this.makeSettingButton();
-                    this.$toolbar.append(this.$deleteButton)
+                    this.$toolbar.append(this.$deleteButton);
                     this.$.append(this.$toolbar);
                     this.editor.$.append(this.$);
 
@@ -164,12 +164,19 @@ console.log('00-div-selector.js');
                 }
             },
             editorClick: function (e) {
-                var target = e.target;
-                var divSelector = $(this).data('div-selector');
+                var target = e.target,
+                    divSelector = $(this).data('div-selector'),
+                    closest = $(e.target).closest(divSelector.selectableTags.join(',')),
+                    isEditor = (closest[0] === this);
 
-                if (target !== this) {
+                if (!isEditor && target !== this) {
+                    /* Target is selectable */
                     if (divSelector.selectableTags.indexOf(target.tagName) > -1) {
                         divSelector.triggerSelect(target);
+                    }
+                    /* Closest is selectable */
+                    else if (divSelector.selectableTags.indexOf(closest[0].tagName) > -1) {
+                        divSelector.triggerSelect(closest[0]);
                     }
                 } else {
                     divSelector.triggerUnselect();
