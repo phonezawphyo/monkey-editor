@@ -137,7 +137,7 @@ console.log('03-space-divs.js');
             this.$.on('monkey:execCommand', function (e) {
                 if (e.command === 'insertHTML') {
                     try {
-                        self.divSelector.triggerSelect($('[data-monkey-id='+e.insertId+']')[0]);
+                        self.divSelector.triggerSelect(e.insertedElement);
                     } catch(e) {
                     }
                 }

@@ -192,7 +192,7 @@
                           <h5>Width</h5>
                           <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
                             <div class="btn-group btn-group-sm">
-                              <a class="btn btn-default" data-action='setCss {"width":""}' data-toggle=tooltip data-placement=bottom title="Reset width">Reset width</a>
+                              <a class="btn btn-default" data-action='setCss {"width":"auto"}' data-toggle=tooltip data-placement=bottom title="Reset width">Reset width</a>
                               <a class="btn btn-default" data-action='setCss {"width":"25%"}' data-toggle=tooltip data-placement=bottom title="Set width to 25%">25%</a>
                               <a class="btn btn-default" data-action='setCss {"width":"50%"}' data-toggle=tooltip data-placement=bottom title="Set width to 50%">50%</a>
                               <a class="btn btn-default" data-action='setCss {"width":"100%"}' data-toggle=tooltip data-placement=bottom title="Set width to 100%">100%</a>
@@ -203,12 +203,25 @@
                           <h5>Height</h5>
                           <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
                             <div class="btn-group btn-group-sm">
-                              <a class="btn btn-default" data-action='setCss {"height":""}' data-toggle=tooltip data-placement=bottom title="Reset height">Reset height</a>
+                              <a class="btn btn-default" data-action='setCss {"height":"auto"}' data-toggle=tooltip data-placement=bottom title="Reset height">Reset height</a>
                               <a class="btn btn-default" data-action='setCss {"height":"25%"}' data-toggle=tooltip data-placement=bottom title="Set height to 25%">25%</a>
                               <a class="btn btn-default" data-action='setCss {"height":"50%"}' data-toggle=tooltip data-placement=bottom title="Set height to 50%">50%</a>
                               <a class="btn btn-default" data-action='setCss {"height":"100%"}' data-toggle=tooltip data-placement=bottom title="Set height to 100%">100%</a>
                             </div>
                             <input type=text placeholder="Custom height" class="form-control input-sm" style="width:100px;" data-action='setCss {"height":"%{value}"}'>
+                          </div>
+                          <! Margin adjustment>
+                          <h5>Margin and Padding</h5>
+                          <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
+                            <div class="btn-group btn-group-sm">
+                              <a class="btn btn-default" data-action='setCss {"margin":""}' data-toggle=tooltip data-placement=bottom title="Reset margin">Reset margin</a>
+                              <input type=text placeholder="Custom margin" class="form-control input-sm" style="width:100px;" data-action='setCss {"margin":"%{value}"}'>
+                            </div>
+
+                            <div class="btn-group btn-group-sm">
+                              <a class="btn btn-default" data-action='setCss {"padding":""}' data-toggle=tooltip data-placement=bottom title="Reset margin">Reset padding</a>
+                              <input type=text placeholder="Custom padding" class="form-control input-sm" style="width:100px;" data-action='setCss {"padding":"%{value}"}'>
+                            </div>
                           </div>
                           <! Color >
                           <h5>Background color</h5>

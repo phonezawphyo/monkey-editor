@@ -139,6 +139,25 @@ console.log('01-toolbar.js');
                     e.preventDefault();
                 }
             },
+            fileDrop: function (e) {
+                var $this = $(this),
+                    mk = $this.data('monkey-editor'),
+                    editor = mk.editor,
+                    dataTransfer = e.originalEvent.dataTransfer,
+                    isFileDrop = (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0);
+
+                e.stopPropagation();
+                e.preventDefault();
+
+
+                if (isFileDrop) {
+                    mk.toolbar.insertFiles(dataTransfer.files);
+                }
+                else {
+                    editor.handleDroppedContent(e.originalEvent.dataTransfer);
+                }
+                $(this).val('');
+            },
             fileChange: function() {
                 var $this = $(this),
                     mk = $this.data('monkey-editor');
@@ -322,7 +341,9 @@ console.log('01-toolbar.js');
         // File inputs
         this.toolbar.find(this.options.toolbar.fileSelector)
         .data('monkey-editor', this)
-        .change(monkey.toolbar.bindings.fileChange);
+        .change(monkey.toolbar.bindings.fileChange)
+        .on('dragenter dragover', false)
+        .on('drop',monkey.toolbar.bindings.fileDrop);
 
         // Action buttons
         this.toolbar.find(this.options.toolbar.actionBtnSelector)

@@ -55,16 +55,6 @@ console.log('main.js');
 
         callbacks: {
             afterInitialize: [],
-            /*
-            onReturn: [function(e) {
-                if (!e.shiftKey) {
-                    document.execCommand('insertHTML', false, '<div><br></div><br>');
-                    return false;
-                } else {
-                    return true;
-                }
-            }],
-           */
         },
 
         fn: {
@@ -205,8 +195,18 @@ console.log('main.js');
             this.restoreSelection = fn.restoreSelection;
             this.getCurrentRange = fn.getCurrentRange;
 
+            this.handleDroppedContent = fn.handleDroppedContent;
+
             /* Bindings */
             var bindings = monkey.editor.bindings;
+            this.$.on('dragover', false);
+            this.$.on('dragenter ', function() {
+                $(this).addClass('dragover');
+            });
+            this.$.on('dragleave dragend drop', function() {
+                $(this).removeClass('dragover');
+            });
+            this.$.on('drop', bindings.fileDrop);
             this.mk.$.on('monkey:beforeViewSwitch', bindings.beforeViewSwitch);
             this.mk.$.on('monkey:afterViewSwitch', bindings.afterViewSwitch);
         },
@@ -225,22 +225,39 @@ console.log('main.js');
                 var arr = commandAndArgs.split(' '),
                     command = arr.shift(),
                     insertId,
-                    args = arr.join(' ') + (value || '');
+                    insertedElement,
+                    argsWithMonkeyId,
+                    args= arr.join(' ') + (value || '');
 
-                if (command === 'insertHTML') {
+                if (command.indexOf('insert') === 0) {
                     insertId = this.nextInsertId();
-                    args = $(args).attr({ 'data-monkey-id': insertId })[0].outerHTML;
+                    if (command === 'insertImage') {
+                        argsWithMonkeyId = $('<img>').attr({src: args}).css({width: '100%'});
+                        command = 'insertHTML';
+                    } else {
+                        argsWithMonkeyId = $(args);
+                    }
+                    argsWithMonkeyId = argsWithMonkeyId.attr({ 'data-monkey-id': insertId })[0].outerHTML;
+                    document.execCommand(command, 0, argsWithMonkeyId);
+                } else {
+                    document.execCommand('styleWithCSS', false, true);
+                    document.execCommand(command, 0, args);
                 }
 
-                document.execCommand('styleWithCSS', false, true);
-                document.execCommand(command, 0, args);
+                if (!!insertId) {
+                    insertedElement = $('[data-monkey-id="'+insertId+'"]');
+                    insertedElement.attr('data-monkey-id', null);
+                    insertedElement = insertedElement[0];
+                }
 
                 this.mk.$.trigger({
                     type: 'monkey:execCommand',
                     command: command,
                     args: args,
-                    insertId: insertId,
+                    insertedElement: insertedElement,
                 });
+
+                return insertedElement;
             },
             nextInsertId: function() {
                 if (!this.insertId) {
@@ -318,8 +335,46 @@ console.log('main.js');
                     }
                 }
             },
+            handleDroppedContent: function(dataTransfer) {
+                // Dropped from another website 
+                //console.log('org.chromium.image-html',e.originalEvent.dataTransfer.getData('org.chromium.image-html'));
+                var textHtml = dataTransfer.getData('text/html'),
+                    textPlain = dataTransfer.getData('text/plain'), // Safari
+                    dataUrl;
+
+                if (!!textHtml) {
+                    dataUrl = $(textHtml).filter('img').attr('src');
+                    if (!dataUrl) {
+                        dataUrl = $(textHtml).find('img').attr('src');
+                    }
+                } else {
+                    dataUrl = textPlain;
+                }
+
+                if (!!dataUrl) {
+                    var inserted = this.execCommand('insertImage ' + dataUrl);
+                    this.$.trigger({
+                        type: 'monkey:contentDropped',
+                        insertedElement: inserted,
+                    });
+                    return true;
+                }
+                return false;
+            },
         },
         bindings: {
+            fileDrop: function(e) {
+                var mk = $(this).data('monkey-editor'),
+                    editor = mk.editor,
+                    srcElem = e.originalEvent.srcElement,
+                    $src = $(srcElem).find('img');
+
+                if (editor.handleDroppedContent(e.originalEvent.dataTransfer)) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                } else {
+                }
+            },
             beforeViewSwitch: function (e) {
                 var $mk = $(this),
                     mk = $mk.data('monkey-editor');
@@ -416,6 +471,7 @@ console.log('main.js');
         });
 
         window.mk = this.mk;
+        console.log(window.mk);
 
         return this;
     };
