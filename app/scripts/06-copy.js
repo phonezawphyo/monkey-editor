@@ -10,7 +10,9 @@ console.log('06-copier.js');
             },
         },
         klass: function(monkeyEditor) {
-            var fn = monkey.copier.fn;
+            var fn = monkey.copier.fn,
+                views = monkey.copier.views;
+
             this.mk = monkeyEditor;
             this.options = monkeyEditor.options;
             this.copy = fn.copy;
@@ -18,6 +20,19 @@ console.log('06-copier.js');
             this.insertable = fn.insertable;
             this.replaceable = fn.replaceable;
             this.copiedContent = null;
+
+            // Views
+            this.makeCopyButton = views.makeCopyButton;
+            this.makePasteButton = views.makePasteButton;
+        },
+
+        views: {
+            makeCopyButton: function () {
+                return $('<a href="javascript:;" class="btn btn-xs btn-default btn-copy"><span class="fa fa-files-o"></span></a>');
+            },
+            makePasteButton: function () {
+                return $('<a href="javascript:;" class="btn btn-xs btn-default btn-paste"><span class="fa fa-clipboard"></span></a>');
+            },
         },
 
         fn: {
@@ -30,7 +45,6 @@ console.log('06-copier.js');
             },
             replaceable: function(replaceElem, withElem) {
                 var replaceableTags = this.options.copier.replaceableTags;
-                console.log(this.options);
                 if (!replaceElem || !withElem) {
                     return false;
                 }
@@ -44,24 +58,32 @@ console.log('06-copier.js');
         },
             
         bindings: {
-            copy: function(e) {
-                var mk = $(this).data('monkey-editor'),
-                    editor = mk.editor,
-                    divSelector = mk.divSelector,
-                    copier = mk.copier,
-                    stuff = divSelector.target,
-                    isCaretCollapsed = document.getSelection().isCollapsed;
+            makeCutOrCopy: function(cutOrCopy) {
+                return function(e) {
+                    var mk = $(this).data('monkey-editor'),
+                        editor = mk.editor,
+                        divSelector = mk.divSelector,
+                        copier = mk.copier,
+                        stuff = divSelector.target,
+                        isCaretCollapsed = document.getSelection().isCollapsed;
 
-                if (isCaretCollapsed) {
-                    copier.copiedContent = stuff;
-                    editor.selectNode(stuff);
-                    console.log('copy', document.execCommand('copy'));
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                } else {
-                    copier.copiedContent = null;
-                }
+                    if (isCaretCollapsed) {
+                        copier.copiedContent = stuff;
+                        editor.selectNode(stuff);
+
+                        if (cutOrCopy === 'cut') {
+                            divSelector.triggerUnselect();
+                        }
+
+                        document.execCommand(cutOrCopy);
+
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    } else {
+                        copier.copiedContent = null;
+                    }
+                };
             },
             paste: function(e) {
                 var mk = $(this).data('monkey-editor'),
@@ -78,9 +100,14 @@ console.log('06-copier.js');
                     if (isElementCopied) {
                         // Replace if replaceable
                         if (copier.replaceable(target, copied)) {
+                            var $replacement = $(copied).clone();
                             // Replace
                             // Delete the selected target
-                            divSelector.removeTarget();
+                            divSelector.triggerUnselect();
+                            $(target).replaceWith($replacement);
+                            setTimeout(function() {
+                                divSelector.triggerSelect($replacement[0]);
+                            });
                             // Let it insert naturally
                             return;
                         }
@@ -96,10 +123,8 @@ console.log('06-copier.js');
                     if (isElementCopied) {
                         // insert if insertable
                         if (copier.insertable(copied)) {
-                            //console.log('paste', document.execCommand('paste'));
                             // Let it insert naturally
-                            return;
-                            //mk.editor.insertAtCaret(copied);
+                            document.execCommand('insertHTML', false, copied.outerHTML);
                         }
                         e.stopPropagation();
                         e.preventDefault();
@@ -117,6 +142,7 @@ console.log('06-copier.js');
         this.extendOptions(monkey.copier.options);
 
         var editor = this.editor,
+            divSelector = this.divSelector,
             self = this,
             copier = new monkey.copier.klass(this),
             fn = monkey.copier.fn,
@@ -124,8 +150,31 @@ console.log('06-copier.js');
 
         this.copier = copier;
 
-        editor.$.on('keydown', null, 'ctrl+c, meta+c', bindings.copy);
+        editor.$.on('keydown', null, 'ctrl+c, meta+c', bindings.makeCutOrCopy('copy'));
+        editor.$.on('keydown', null, 'ctrl+x, meta+x', bindings.makeCutOrCopy('cut'));
         editor.$.on('keydown', null, 'ctrl+v, meta+v', bindings.paste);
+        editor.$.on('monkey:selectionBoxReplaced', function() {
+            var copy = bindings.makeCutOrCopy('copy'),
+                savedRange = editor.getCurrentRange();
+
+            copier.$pasteButton = copier.makePasteButton();
+            copier.$copyButton = copier.makeCopyButton();
+            divSelector.$toolbar.prepend(copier.$pasteButton).prepend(copier.$copyButton);
+
+            copier.$copyButton.on('click', function(e) {
+                editor.restoreSelection(savedRange);
+                copy.call(editor.$, e);
+            });
+
+            copier.$pasteButton.on('click', function(e) {
+                editor.restoreSelection(savedRange);
+                bindings.paste.call(editor.$, e);
+            });
+        }).on('monkey:selectionBoxMoved', function() {
+            var toggle = divSelector.isTargetEditable();
+            !!copier.$pasteButton && copier.$pasteButton.toggle(toggle);
+            !!copier.$copyButton && copier.$copyButton.toggle(toggle);
+        });
     });
 
 })(jQuery);

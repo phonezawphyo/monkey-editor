@@ -6,7 +6,7 @@ console.log('01-div-selector.js');
         options: {
             divSelector: {
                 selectableTags: ['DIV','TABLE','IMG','TD','P','BLOCKQUOTE','CODE','H1','H2','H3','H4','H5','H6','H7','OL','UL','LI'],
-                uncuttableTags: ['TD','LI'],
+                uneditableTags: ['TD','LI'],
                 selectionBoxClass: 'mk-selection-box',
                 selectionBoxToolbarClass: 'mk-selection-box-tools',
             },
@@ -40,13 +40,14 @@ console.log('01-div-selector.js');
             this.moveSelectionBox = fn.moveSelectionBox;
             this.removeTarget = fn.removeTarget;
             this.isSelected = fn.isSelected;
+            this.isTargetEditable = fn.isTargetEditable;
 
             /* Select and unselect methods*/
             this.triggerSelect = fn.triggerSelect;
             this.triggerUnselect = fn.triggerUnselect;
 
             this.selectableTags = this.options.divSelector.selectableTags;
-            this.uncuttableTags = this.options.divSelector.uncuttableTags;
+            this.uneditableTags = this.options.divSelector.uneditableTags;
         },
         fn: {
             toggleSelectionBox: function(show) {
@@ -54,16 +55,21 @@ console.log('01-div-selector.js');
                     this.$.toggleClass('hidden',!show);
                 }
             },
+            isTargetEditable: function() {
+                return (this.uneditableTags.indexOf(this.target.tagName) === -1);
+            },
             moveSelectionBox: function(target) {
                 target = $(target);
-                var pos = target.position();
+                var editor = this.editor,
+                    pos = target.position();
+                
                 pos.left = pos.left + this.editor.$.scrollLeft();
                 pos.top = pos.top + this.editor.$.scrollTop();
 
-                var marginTop = target.css('margin-top');
-                var marginBottom = target.css('margin-bottom');
-                var marginLeft = target.css('margin-left');
-                var marginRight = target.css('margin-right');
+                var marginTop = target.css('margin-top'),
+                    marginBottom = target.css('margin-bottom'),
+                    marginLeft = target.css('margin-left'),
+                    marginRight = target.css('margin-right');
 
                 this.replaceSelectionBox();
 
@@ -79,8 +85,12 @@ console.log('01-div-selector.js');
                         '100% ' + marginBottom,
                 });
 
-                var toggleUncuttableTags = (this.uncuttableTags.indexOf(this.target.tagName) === -1);
-                !!this.$deleteButton && this.$deleteButton.toggle(toggleUncuttableTags);
+                !!this.$deleteButton && this.$deleteButton.toggle(this.isTargetEditable());
+                
+                this.editor.$.trigger({
+                    type: 'monkey:selectionBoxMoved',
+                    target: this.target,
+                });
             },
             replaceSelectionBox: function () {
                 var $box = this.editor.$.find('.'+this.options.divSelector.selectionBoxClass);
@@ -156,10 +166,20 @@ console.log('01-div-selector.js');
             removeTarget: function () {
                 var $target = $(this.target),
                     mk = this.monkeyEditor,
-                    editor = mk.editor;
+                    editor = mk.editor,
+                    target = $target[0];
+
                 this.triggerUnselect();
-                editor.selectNode($target[0]);
-                document.execCommand('delete');
+                $target.remove();
+                /*
+                return;
+                editor.selectNode(target);
+                if (target.tagName === 'H1') {
+                    document.execCommand('formatBlock', false, '<div>');
+                    editor.selectNode(target);
+                }
+                document.execCommand('delete', false);
+               */
             },
         },
         bindings: {
@@ -198,7 +218,8 @@ console.log('01-div-selector.js');
     };
 
     monkey.callbacks.afterInitialize.push(function divSelectorAfterInitialize() {
-        var editor = this.editor;
+        var editor = this.editor,
+            self = this;
 
         /* Extend options */
         this.extendOptions(monkey.divSelector.options);
@@ -226,7 +247,7 @@ console.log('01-div-selector.js');
         });
         this.$.on('monkey:beforeViewSwitch', function (e) {
             if (e.toView !== editor) {
-                editor.$.find('.'+this.options.divSelector.selectionBoxClass).remove();
+                editor.$.find('.'+self.options.divSelector.selectionBoxClass).remove();
             }
         });
 

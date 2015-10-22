@@ -298,16 +298,17 @@ console.log('00-main.js');
             saveSelection: function () {
                 this.selectedRange = this.getCurrentRange();
             },
-            restoreSelection: function () {
+            restoreSelection: function (to) {
                 var selection = window.getSelection();
-                if (!!this.selectedRange) {
+                to = to || this.selectedRange;
+                if (!!to) {
                     try {
                         selection.removeAllRanges();
                     } catch (ex) {
                         document.body.createTextRange().select();
                         document.selection.empty();
                     }
-                    selection.addRange(this.selectedRange);
+                    selection.addRange(to);
                 }
             },
             insertAtCaret: function (html) {
