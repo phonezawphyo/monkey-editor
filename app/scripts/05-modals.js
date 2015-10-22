@@ -11,8 +11,10 @@ console.log('05-modals.js');
                 settingsModalSelector: '[data-role=editor-modals] > [data-modal=settings]',
             },
         },
-
-        callbacks: {
+        views: {
+            makeSettingButton: function () {
+                return $('<a href="javascript:;" class="btn btn-xs btn-default"><span class="fa fa-cog"></span></a>');
+            },
         },
 
         bindings: {
@@ -23,7 +25,9 @@ console.log('05-modals.js');
     };
 
     monkey.callbacks.afterInitialize.push(function objectBarAfterInitialize() {
-        //var editor = this.editor;
+        var editor = this.editor,
+            divSelector = this.divSelector,
+            self = this;
 
         /* Extend options */
         this.extendOptions(monkey.modals.options);
@@ -43,6 +47,19 @@ console.log('05-modals.js');
                 selector.triggerSelect(selector.lastSelectedTarget);
             });
 
+            editor.$.on('monkey:selectionBoxReplaced', function() {
+                var $settingButton = monkey.modals.views.makeSettingButton();
+
+                divSelector.$toolbar.prepend($settingButton);
+
+                $settingButton.on('click', function(e) {
+                    $(self.options.modal.settingsModalSelector).modal('show');
+                    e.stopPropagation();
+                    e.preventDefault();
+                    return false;
+                });
+            }).on('monkey:selectionBoxMoved', function() {
+            });
         }
     });
 

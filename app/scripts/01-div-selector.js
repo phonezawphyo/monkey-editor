@@ -21,9 +21,6 @@ console.log('01-div-selector.js');
             makeDeleteButton: function () {
                 return $('<a href="javascript:;" class="btn btn-xs btn-danger btn-delete"><span class="fa fa-trash"></span></a>');
             },
-            makeSettingButton: function () {
-                return $('<a href="javascript:;" class="btn btn-xs btn-default"><span class="fa fa-cog"></span></a>');
-            },
         },
         klass: function(monkeyEditor) {
             var fn = monkey.divSelector.fn;
@@ -113,18 +110,6 @@ console.log('01-div-selector.js');
                         e.preventDefault();
                         return false;
                     });
-
-                    /* Modal */
-                    if (!!options.modal && !!options.modal.settingsModalSelector) {
-                        this.$settingButton = this.makeSettingButton();
-                        this.$toolbar.append(this.$settingButton);
-                        this.$settingButton.on('click', function (e) {
-                            $(options.modal.settingsModalSelector).modal('show');
-                            e.stopPropagation();
-                            e.preventDefault();
-                            return false;
-                        });
-                    }
 
                     /* Trigger event for extension */
                     this.editor.$.trigger({

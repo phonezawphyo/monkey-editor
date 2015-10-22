@@ -161,8 +161,6 @@ console.log('02-toolbar.js');
             fileChange: function() {
                 var $this = $(this),
                     mk = $this.data('monkey-editor');
-                    //command = $this.attr(mk.options.toolbar.commandKey),
-                    //action = $this.attr(mk.options.toolbar.actionKey);
                 if (this.type === 'file' && this.files && this.files.length > 0) {
                     mk.toolbar.insertFiles(this.files);
                     $(this).val('');
