@@ -3,11 +3,17 @@ console.log('03-space-divs.js');
 (function($) {
     var monkey = window.monkey;
     monkey.spaceDivs = {
-        moveDelay: 0,
-        hideDelay: 0,
+        options: {
+            spaceDivs: {
+                moveDelay: 0,
+                hideDelay: 0,
+                excludeTags: ['TD'],
+            },
+        },
 
         klass: function(monkeyEditor) {
             this.mk = monkeyEditor;
+            this.options = this.mk.options;
             this.editor = this.mk.editor;
             var spaceDivs = monkey.spaceDivs;
             this.top = spaceDivs.views.makeTop.call(this);
@@ -20,6 +26,7 @@ console.log('03-space-divs.js');
             this.moveToTarget = spaceDivs.fn.moveToTarget;
             this.hide = spaceDivs.fn.hide;
             this.resetBindings = spaceDivs.fn.resetBindings;
+            this.excludeTags = this.options.spaceDivs.excludeTags;
         },
         views: {
             makeTop: function() {
@@ -73,7 +80,7 @@ console.log('03-space-divs.js');
                         self.bottom.remove();
                         self.target = null;
                         self.hideTimer = null;
-                    }, monkey.spaceDivs.hideDelay);
+                    }, this.options.spaceDivs.hideDelay);
                 }
             },
             resetBindings: function () {
@@ -97,23 +104,28 @@ console.log('03-space-divs.js');
                     move();
                 } else if (this.target !== target) {
                     this.clearMoveTimer();
-                    this.moveTimer = setTimeout(move, monkey.spaceDivs.moveDelay);
+                    this.moveTimer = setTimeout(move, this.options.spaceDivs.moveDelay);
                 }
             },
         },
 
         bindings: {
             editorSelectDiv: function (e) {
-                var target = e.selectTarget;
-                var spaceDivs= $(this).data('space-divs');
+                var target = e.selectTarget,
+                    spaceDivs= $(this).data('space-divs');
 
-                spaceDivs.clearHideTimer();
+                if (spaceDivs.excludeTags.indexOf(target.tagName) === -1) {
+                    spaceDivs.clearHideTimer();
 
-                if (!target.classList.contains('mk-space')) {
-                    spaceDivs.moveToTarget(target);
+                    if (!target.classList.contains('mk-space')) {
+                        spaceDivs.moveToTarget(target);
+                    } else {
+                        spaceDivs.clearMoveTimer();
+                    }
                 } else {
-                    spaceDivs.clearMoveTimer();
+                    spaceDivs.hide();
                 }
+
             },
             editorUnselectDiv: function () {
                 var spaceDivs= $(this).data('space-divs');
@@ -123,6 +135,9 @@ console.log('03-space-divs.js');
     };
 
     monkey.callbacks.afterInitialize.push(function spaceDivsAfterInitialize() {
+        /* Extend options */
+        this.extendOptions(monkey.spaceDivs.options);
+
         var editor = this.editor,
             self = this,
             spaceDivs = new monkey.spaceDivs.klass(this);

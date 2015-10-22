@@ -1,5 +1,5 @@
 'use strict';
-console.log('01-toolbar.js');
+console.log('02-toolbar.js');
 (function() {
     String.prototype.parseValue = function(value) {
         return this.replace(/%{value}/,value);

@@ -1,5 +1,5 @@
 'use strict';
-console.log('main.js');
+console.log('00-main.js');
 (function($) {
     /* Core methods */
     var monkey = $.extend(true, {
@@ -194,6 +194,7 @@ console.log('main.js');
             this.saveSelection = fn.saveSelection;
             this.restoreSelection = fn.restoreSelection;
             this.getCurrentRange = fn.getCurrentRange;
+            this.selectNode = fn.selectNode;
 
             this.handleDroppedContent = fn.handleDroppedContent;
 
@@ -229,7 +230,7 @@ console.log('main.js');
                     argsWithMonkeyId,
                     args= arr.join(' ') + (value || '');
 
-                if (command.indexOf('insert') === 0) {
+                if (command.indexOf('insert') === 0 && !!args) {
                     insertId = this.nextInsertId();
                     if (command === 'insertImage') {
                         argsWithMonkeyId = $('<img>').attr({src: args}).css({width: '100%'});
@@ -282,6 +283,17 @@ console.log('main.js');
                 if (sel.getRangeAt && sel.rangeCount) {
                     return sel.getRangeAt(0);
                 }
+            },
+            selectNode: function (elem) {
+                var range = document.createRange();
+                range.selectNode(elem);
+                try {
+                    window.getSelection().removeAllRanges();
+                } catch (ex) {
+                    document.body.createTextRange().select();
+                    document.selection.empty();
+                }
+                window.getSelection().addRange(range);
             },
             saveSelection: function () {
                 this.selectedRange = this.getCurrentRange();
@@ -365,9 +377,7 @@ console.log('main.js');
         bindings: {
             fileDrop: function(e) {
                 var mk = $(this).data('monkey-editor'),
-                    editor = mk.editor,
-                    srcElem = e.originalEvent.srcElement,
-                    $src = $(srcElem).find('img');
+                    editor = mk.editor;
 
                 if (editor.handleDroppedContent(e.originalEvent.dataTransfer)) {
                     e.stopPropagation();

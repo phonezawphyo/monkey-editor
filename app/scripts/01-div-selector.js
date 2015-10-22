@@ -1,22 +1,25 @@
 'use strict';
-console.log('00-div-selector.js');
+console.log('01-div-selector.js');
 (function($) {
     var monkey = window.monkey;
     monkey.divSelector = {
         options: {
             divSelector: {
-                selectableTags: 'div,table,img',
+                selectableTags: ['DIV','TABLE','IMG','TD','P','BLOCKQUOTE','CODE','H1','H2','H3','H4','H5','H6','H7','OL','UL','LI'],
+                uncuttableTags: ['TD','LI'],
+                selectionBoxClass: 'mk-selection-box',
+                selectionBoxToolbarClass: 'mk-selection-box-tools',
             },
         },
         views: {
             makeSelectionBox: function () {
-                return $('<div>').addClass('mk-selection-box hidden');
+                return $('<div>').addClass(this.options.divSelector.selectionBoxClass+' hidden');
             },
             makeToolbar: function () {
-                return $('<div class="mk-selection-box-tools">');
+                return $('<div class="'+this.options.divSelector.selectionBoxToolbarClass+'">');
             },
             makeDeleteButton: function () {
-                return $('<a href="javascript:;" class="btn btn-xs btn-danger"><span class="fa fa-trash"></span></a>');
+                return $('<a href="javascript:;" class="btn btn-xs btn-danger btn-delete"><span class="fa fa-trash"></span></a>');
             },
             makeSettingButton: function () {
                 return $('<a href="javascript:;" class="btn btn-xs btn-default"><span class="fa fa-cog"></span></a>');
@@ -42,15 +45,10 @@ console.log('00-div-selector.js');
             this.triggerSelect = fn.triggerSelect;
             this.triggerUnselect = fn.triggerUnselect;
 
-            this.setSelectableTags = fn.setSelectableTags;
-            this.setSelectableTags();
+            this.selectableTags = this.options.divSelector.selectableTags;
+            this.uncuttableTags = this.options.divSelector.uncuttableTags;
         },
         fn: {
-            setSelectableTags: function () {
-                this.selectableTags = this.options.divSelector.selectableTags
-                .split(',')
-                .map(function(o) { return o.toUpperCase(); });
-            },
             toggleSelectionBox: function(show) {
                 if (!!this.$) {
                     this.$.toggleClass('hidden',!show);
@@ -80,23 +78,25 @@ console.log('00-div-selector.js');
                         '100% ' + marginTop + ',' +
                         '100% ' + marginBottom,
                 });
+
+                var toggleUncuttableTags = (this.uncuttableTags.indexOf(this.target.tagName) === -1);
+                !!this.$deleteButton && this.$deleteButton.toggle(toggleUncuttableTags);
             },
             replaceSelectionBox: function () {
-                var $box = this.editor.$.find('.mk-selection-box');
+                var $box = this.editor.$.find('.'+this.options.divSelector.selectionBoxClass);
                 // Replace a new box if it was accidentally deleted
-                if ($box.length === 0 || $('.mk-selection-box-tools', $box).length === 0) {
+                if ($box.length === 0 || $('.'+this.options.divSelector.selectionBoxToolbarClass, $box).length === 0) {
                     $box.remove();
                     var self = this,
                         options = this.monkeyEditor.options;
                     this.$ = this.makeSelectionBox();
                     this.$toolbar = this.makeToolbar();
-                    this.$deleteButton = this.makeDeleteButton();
-                    this.$settingButton = this.makeSettingButton();
-                    this.$toolbar.append(this.$deleteButton);
                     this.$.append(this.$toolbar);
                     this.editor.$.append(this.$);
 
                     /* Bindings */
+                    this.$deleteButton = this.makeDeleteButton();
+                    this.$toolbar.append(this.$deleteButton);
                     this.$deleteButton.on('click', function (e) {
                         self.removeTarget(self.target);
                         e.stopPropagation();
@@ -104,7 +104,9 @@ console.log('00-div-selector.js');
                         return false;
                     });
 
+                    /* Modal */
                     if (!!options.modal && !!options.modal.settingsModalSelector) {
+                        this.$settingButton = this.makeSettingButton();
                         this.$toolbar.append(this.$settingButton);
                         this.$settingButton.on('click', function (e) {
                             $(options.modal.settingsModalSelector).modal('show');
@@ -113,6 +115,13 @@ console.log('00-div-selector.js');
                             return false;
                         });
                     }
+
+                    /* Trigger event for extension */
+                    this.editor.$.trigger({
+                        type: 'monkey:selectionBoxReplaced',
+                        $toolbar: self.$toolbar,
+                        target: self.target,
+                    });
 
                 }
             },
@@ -145,9 +154,12 @@ console.log('00-div-selector.js');
                 });
             },
             removeTarget: function () {
-                var $target = $(this.target);
+                var $target = $(this.target),
+                    mk = this.monkeyEditor,
+                    editor = mk.editor;
                 this.triggerUnselect();
-                $target.remove();
+                editor.selectNode($target[0]);
+                document.execCommand('delete');
             },
         },
         bindings: {
@@ -159,7 +171,7 @@ console.log('00-div-selector.js');
                     return false;
                 } else
                 // 16 = Shift key
-                if (e.keyCode !== 16 && !e.ctrlKey) {
+                if (e.keyCode !== 16 && !e.ctrlKey && !e.metaKey) {
                     divSelector.triggerUnselect();
                 }
             },
@@ -214,7 +226,7 @@ console.log('00-div-selector.js');
         });
         this.$.on('monkey:beforeViewSwitch', function (e) {
             if (e.toView !== editor) {
-                editor.$.find('.mk-selection-box').remove();
+                editor.$.find('.'+this.options.divSelector.selectionBoxClass).remove();
             }
         });
 

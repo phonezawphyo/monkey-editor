@@ -5,8 +5,9 @@
     "bootstrap-sass-official": "~3.1.0",
     "fontawesome": "~4.4.0",
     "jquery": "~2.1.4",
-
-    "js-beautify":""
+    "js-beautify":"~1.5.10",
+    "spectrum":"~1.7.1",
+    "jquery.hotkeys":"~0.2.0"
   },
   "devDependencies": {}
 }
