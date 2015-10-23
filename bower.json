@@ -6,8 +6,8 @@
     "fontawesome": "~4.4.0",
     "jquery": "~2.1.4",
     "js-beautify":"~1.5.10",
-    "spectrum":"~1.7.1",
-    "jQuery.Hotkeys":"~0.2.0"
+    "jQuery.Hotkeys":"~0.2.0",
+    "mjolnic-bootstrap-colorpicker": "~2.3.0"
   },
   "devDependencies": {}
 }

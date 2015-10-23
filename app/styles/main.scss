@@ -95,32 +95,7 @@ body {
 }
 
 
-.sp-container {
-  border: 1px solid lightgray;
-  border-radius: 4px;
-  background-color: white;
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
-  transform: translateY(2px);
-  .sp-cancel {
-    @extend .btn;
-    @extend .btn-xs;
-    @extend .btn-link;
-    color: #428bca !important;
-  }
-  .sp-choose {
-    @extend .btn;
-    @extend .btn-xs;
-    @extend .btn-default;
-  }
-  .sp-input {
-    @extend .form-control;
-    @extend .input-sm;
-  }
-  .sp-initial span {
-    height: 28px;
-  }
-}
-.sp-preview {
-  width: 18px;
-  height: 18px;
+.colorpicker {
+  min-width: 125px;
+  z-index: 1051;
 }

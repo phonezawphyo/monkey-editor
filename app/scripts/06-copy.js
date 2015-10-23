@@ -87,7 +87,6 @@ console.log('06-copier.js');
             },
             paste: function(e) {
                 var mk = $(this).data('monkey-editor'),
-                    editor = mk.editor,
                     copier = mk.copier,
                     divSelector = mk.divSelector,
                     copied = copier.copiedContent,
@@ -143,9 +142,7 @@ console.log('06-copier.js');
 
         var editor = this.editor,
             divSelector = this.divSelector,
-            self = this,
             copier = new monkey.copier.klass(this),
-            fn = monkey.copier.fn,
             bindings = monkey.copier.bindings;
 
         this.copier = copier;
@@ -172,8 +169,14 @@ console.log('06-copier.js');
             });
         }).on('monkey:selectionBoxMoved', function() {
             var toggle = divSelector.isTargetEditable();
-            !!copier.$pasteButton && copier.$pasteButton.toggle(toggle);
-            !!copier.$copyButton && copier.$copyButton.toggle(toggle);
+                
+            if (!!copier.$pasteButton) {
+                copier.$pasteButton.toggle(toggle);
+            }
+
+            if (!!copier.$copyButton) {
+                copier.$copyButton.toggle(toggle);
+            }
         });
     });
 

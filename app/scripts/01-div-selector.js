@@ -57,8 +57,7 @@ console.log('01-div-selector.js');
             },
             moveSelectionBox: function(target) {
                 target = $(target);
-                var editor = this.editor,
-                    pos = target.position();
+                var pos = target.position();
                 
                 pos.left = pos.left + this.editor.$.scrollLeft();
                 pos.top = pos.top + this.editor.$.scrollTop();
@@ -82,7 +81,9 @@ console.log('01-div-selector.js');
                         '100% ' + marginBottom,
                 });
 
-                !!this.$deleteButton && this.$deleteButton.toggle(this.isTargetEditable());
+                if (!!this.$deleteButton) {
+                    this.$deleteButton.toggle(this.isTargetEditable());
+                }
                 
                 this.editor.$.trigger({
                     type: 'monkey:selectionBoxMoved',
@@ -94,8 +95,7 @@ console.log('01-div-selector.js');
                 // Replace a new box if it was accidentally deleted
                 if ($box.length === 0 || $('.'+this.options.divSelector.selectionBoxToolbarClass, $box).length === 0) {
                     $box.remove();
-                    var self = this,
-                        options = this.monkeyEditor.options;
+                    var self = this;
                     this.$ = this.makeSelectionBox();
                     this.$toolbar = this.makeToolbar();
                     this.$.append(this.$toolbar);
@@ -149,10 +149,7 @@ console.log('01-div-selector.js');
                 });
             },
             removeTarget: function () {
-                var $target = $(this.target),
-                    mk = this.monkeyEditor,
-                    editor = mk.editor,
-                    target = $target[0];
+                var $target = $(this.target);
 
                 this.triggerUnselect();
                 $target.remove();

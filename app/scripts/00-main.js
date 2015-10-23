@@ -193,6 +193,7 @@ console.log('00-main.js');
 
             this.saveSelection = fn.saveSelection;
             this.restoreSelection = fn.restoreSelection;
+            this.isSelectionCollapsed = fn.isSelectionCollapsed;
             this.getCurrentRange = fn.getCurrentRange;
             this.selectNode = fn.selectNode;
 
@@ -297,6 +298,13 @@ console.log('00-main.js');
             },
             saveSelection: function () {
                 this.selectedRange = this.getCurrentRange();
+            },
+            isSelectionCollapsed: function () {
+                if (!!this.selectedRange) {
+                    return this.selectedRange.collapsed;
+                } else {
+                    return true;
+                }
             },
             restoreSelection: function (to) {
                 var selection = window.getSelection();

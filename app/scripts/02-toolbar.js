@@ -50,6 +50,39 @@ console.log('02-toolbar.js');
             fullscreen: function () {
                 this.mk.toggleFullscreen(!this.mk.fullscreen);
             },
+            addLink: function (url) {
+                var mk = this.mk,
+                    editor = mk.editor,
+                    target = mk.divSelector.lastSelectedTarget,
+                    $target = $(target);
+
+                if (editor.isSelectionCollapsed()) {
+                    if ($target.parent().is('a')) {
+                        $target.parent().attr({href: url});
+                    } else {
+                        $(target).wrap($('<a>').attr({href: url}));
+                    }
+                    mk.divSelector.triggerSelect(target);
+                } else {
+                    this.processCommandOrAction('createLink '+url);
+                }
+            },
+            removeLink: function () {
+                var mk = this.mk,
+                    editor = mk.editor,
+                    target = mk.divSelector.lastSelectedTarget,
+                    $target = $(target);
+
+                if (editor.isSelectionCollapsed()) {
+                    if ($target.parent().is('a')) {
+                        $(target).unwrap();
+                    }
+                    mk.divSelector.triggerSelect(target);
+                } else {
+                    this.processCommandOrAction('unlink');
+                }
+
+            },
             fontSize: function (size) {
                 var sel= window.getSelection(),
                     text = sel.toString(),
@@ -98,8 +131,6 @@ console.log('02-toolbar.js');
             inputClick: function(e) {
                 e.preventDefault();
                 return false;
-            },
-            inputFocus: function() {
             },
             inputBlur: function() {
                 var $this = $(this),
@@ -195,6 +226,79 @@ console.log('02-toolbar.js');
                     action: action,
                 });
             },
+            storeCssActions: function () {
+                var options = this.options.toolbar,
+                    mk = this.mk,
+                    divSelector = this.mk.divSelector,
+                    target = divSelector.target;
+
+                $(options.selector).find('['+options.actionKey+'^=setCss]').each(function () {
+                  var $this =$(this),
+                      cssProps = Object.keys(JSON.parse($this.attr('data-action').split(' ')[1]));
+
+                  $this.data('css-actions', cssProps);
+                });
+            },
+            updateCssActions: function () {
+                var options = this.options.toolbar,
+                    mk = this.mk,
+                    divSelector = this.mk.divSelector,
+                    target = divSelector.target;
+
+                $(options.selector).find('['+options.actionKey+'^=setCss]').each(function () {
+                  var $this =$(this),
+                      cssProps = $this.data('css-actions');
+
+                      for (var k in cssProps) {
+                          var prop = cssProps[k],
+                              $target = $(divSelector.target),
+                              style = $target.attr('style') || '', 
+                              propInStyle = style.indexOf(prop) > -1,
+                              newValue = propInStyle ? $(divSelector.target).css(prop) : '';
+                          $this.val(newValue);
+                          $(this).trigger({
+                              type: 'monkey:valueUpdated',
+                              cssProperty: prop,
+                              newValue: newValue,
+                          });
+                      }
+                });
+            },
+            updateAddLink: function () {
+                var options = this.options.toolbar,
+                    mk = this.mk,
+                    editor = mk.editor,
+                    keyword = 'addLink',
+                    divSelector = this.mk.divSelector,
+                    $target = $(divSelector.target),
+                    newValue = '',
+                    $selector = $(options.selector).find('['+options.actionKey+'^='+keyword+']');
+
+                $selector.each(function () {
+                  var $this =$(this),
+                      $parent = $target.parent();
+
+                  if (editor.isSelectionCollapsed()) {
+                      if (!!$parent && $parent.is('a')) {
+                          newValue = $parent.attr('href');
+                      }
+                  } else {
+                      var node = document.getSelection().anchorNode.parentNode,
+                          $node = $(node);
+                      if ($node.is('a')) {
+                        newValue = $node.attr('href');
+                      }
+                  }
+
+                  $this.val(newValue);
+                  $this.trigger({
+                    type: 'monkey:valueUpdated',
+                    keyword: keyword,
+                    newValue: newValue,
+                  });
+                });
+            },
+
             update: function () {
                 var options = this.options.toolbar;
                 if (options.activeClass) {
@@ -210,9 +314,13 @@ console.log('02-toolbar.js');
                     $(this).val(newValue);
                     $(this).trigger({
                         type: 'monkey:valueUpdated',
+                        keyword: !!keyword ? keyword : command,
                         newValue: newValue,
                     });
                 });
+
+                this.updateCssActions();
+                this.updateAddLink();
             },
             switchView: function (toView) {
                 var mk = this.mk,
@@ -224,11 +332,11 @@ console.log('02-toolbar.js');
 
                 if (toView === mk.codeview) {
                     $codeviewBtn.addClass(activeClass);
-                    $('.btn', this).addClass(disabledClass);
+                    $('.btn,input', this).addClass(disabledClass);
                     $enableBtn.removeClass(disabledClass);
                 } else {
                     $codeviewBtn.removeClass(activeClass);
-                    $('.btn', this).removeClass(disabledClass);
+                    $('.btn,input', this).removeClass(disabledClass);
                 }
             },
             resetFullscreenWrapperTop: function () {
@@ -292,18 +400,25 @@ console.log('02-toolbar.js');
         this.editor = this.mk.editor;
         this.options = this.mk.options;
         this.processAction = fn.processAction;
+        this.storeCssActions = fn.storeCssActions;
         this.update = fn.update;
+        this.updateCssActions = fn.updateCssActions;
+        this.updateAddLink = fn.updateAddLink;
         this.switchView = fn.switchView;
         this.toggleFullscreen = fn.toggleFullscreen;
         this.resetFullscreenWrapperTop = fn.resetFullscreenWrapperTop;
         this.processCommandOrAction = fn.processCommandOrAction;
         this.insertFiles = fn.insertFiles;
         this.addClass('mk-toolbar');
+        this.storeCssActions();
         return this;
     };
 
     monkey.callbacks.afterInitialize.push(function objectBarAfterInitialize() {
         var editor = this.editor;
+
+        /* Make dropdowns interactive */
+        $('[data-toggle=dropdown]').dropdown();
 
         /* BeforeToolbarInitialize callback */
         this.execCallbacks(monkey.toolbar.callbacks.beforeInitialize);
@@ -324,15 +439,12 @@ console.log('02-toolbar.js');
         this.toolbar.find(this.options.toolbar.keydownTriggerInputSelector)
         .data('monkey-editor', this)
         .click(monkey.toolbar.bindings.inputClick)
-        .focus(monkey.toolbar.bindings.inputFocus)
         .blur(monkey.toolbar.bindings.inputBlur)
         .keydown(monkey.toolbar.bindings.inputKeydown);
 
         // Change trigger inputs
         this.toolbar.find(this.options.toolbar.changeTriggerInputSelector)
         .data('monkey-editor', this)
-        .click(monkey.toolbar.bindings.inputClick)
-        .focus(monkey.toolbar.bindings.inputFocus)
         .blur(monkey.toolbar.bindings.inputBlur)
         .change(monkey.toolbar.bindings.inputChange);
 
@@ -349,9 +461,16 @@ console.log('02-toolbar.js');
         .click(monkey.toolbar.bindings.btnClick);
 
         // Editor
-        editor.$.on('mouseup keyup mouseout', function() {
-            editor.saveSelection();
+        // editor.$.on('mouseup keyup mouseout', function() {
+        //     editor.saveSelection();
+        //     toolbar.update();
+        // });
+        editor.$
+        .on('mouseup monkey:afterSelectDiv', function() {
             toolbar.update();
+        })
+        .on('blur', function() {
+            editor.saveSelection();
         });
 
         /* Monkey events */

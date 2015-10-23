@@ -2,13 +2,13 @@
 console.log('05-modals.js');
 (function() {
     var monkey = window.monkey;
-
+                
     // Set toolbars to be displayed
     monkey.modals = {
         options: {
             modal: {
                 selector: '[data-role=editor-modals] > .modal',
-                settingsModalSelector: '[data-role=editor-modals] > [data-modal=settings]',
+                modalKey: 'data-modal',
             },
         },
         views: {
@@ -23,6 +23,17 @@ console.log('05-modals.js');
         fn: {
         },
     };
+
+    /* Extend toolbar */
+    monkey.toolbar = $.extend(true, {
+        actions: {
+            openModal: function (modalName) {
+                var mk = this.mk,
+                    options = mk.options.modal;
+                $(options.selector+'['+options.modalKey+'='+modalName+']').modal('show');
+            },
+        },
+    }, monkey.toolbar || {});
 
     monkey.callbacks.afterInitialize.push(function objectBarAfterInitialize() {
         var editor = this.editor,
@@ -53,7 +64,8 @@ console.log('05-modals.js');
                 divSelector.$toolbar.prepend($settingButton);
 
                 $settingButton.on('click', function(e) {
-                    $(self.options.modal.settingsModalSelector).modal('show');
+                    var options = self.options.modal;
+                    $(options.selector+'['+options.modalKey+'=settings]').modal('show');
                     e.stopPropagation();
                     e.preventDefault();
                     return false;

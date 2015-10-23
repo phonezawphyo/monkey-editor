@@ -7,7 +7,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1039;
+  z-index: 999;
   padding: 8px;
   background-color: rgba(0,0,0,0.85);
 }
@@ -17,7 +17,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1038;
+  z-index: 998;
   height: auto !important;
 
   .mk-editable, .mk-codeview {
@@ -44,17 +44,16 @@
   div,table,img {
     min-height: 20px;
     border-left: 5px dotted rgba(0,0,0,0.1);
-    outline: 1px dotted rgba(0,0,0,0.2);
+    //outline: 1px dashed rgba(0,0,0,0.2);
     border-collapse: separate;
 
     &:hover {
-      outline: 1px dotted rgba(0,0,0,0.8);
+      border-left-color: rgba(0,0,0,0.2);
     }
   }
 
   .mk-space {
     outline: none;
-    background-color: rgba(0,0,0,0.15);
     text-align: center;
     height: 20px;
     left: 0;
@@ -64,6 +63,10 @@
     transform: scale3d(0.1,0.4,1);
     border-radius: 20px;
     cursor: pointer;
+    background-color: hsla(0,0%,90%,0.6);  
+    background-image: linear-gradient(-45deg, hsla(0,0%,0%,0), hsla(0,0%,0%,.035));
+    background-size: 8px;
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.15);
 
     &:hover {
       outline: none;
@@ -72,7 +75,7 @@
     }
 
     &:before {
-      content: '+';
+      content: '';
       color: black;
       font-weight: bold;
       font-size: 19px;
@@ -86,7 +89,7 @@
     $margin-color: rgba(250,160,0,0.3);
     min-height: 20px;
     min-width: 20px;
-    border: 1px solid $select-color;
+    border: 2px dashed $select-color;
     position: absolute;
     top: 0;
     left: 0;
@@ -129,16 +132,23 @@
 
     & > .mk-selection-box-tools {
       position: absolute;
-      top: -21px;
+      bottom: 100%;
+      transform: translateY(-3px);
       right: 0;
       pointer-events: initial;
       outline: none !important;
       border: none !important;
+      padding-right: 2px;
+      padding-left: 2px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 4px;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
       z-index: 10;
+      text-align: center;
 
       .btn {
         line-height: 12px;
-        margin-left: 4px;
+        margin: 0 2px;
       }
     }
   }
@@ -189,21 +199,16 @@
   height: 100% !important;
 }
 
+.dropdown-menu > li > .input-group {
+  margin: 8px;
+}
 .dropdown-menu > li > a {
   cursor: pointer;
-}
-
-.dropdown-menu > li.with-padding {
-  padding: 8px;
-  display: inline-block;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .btn-group {
   margin-bottom: 8px;
 }
-.btn-toolbar + .btn-object-bar,
 .btn-toolbar + .mk-editable {
   margin-top: 8px;
 } 
@@ -246,12 +251,12 @@
 }
 
 [data-colorpicker]{
-  text-shadow: 0 0 1px rgba(0,0,0,0.6);
+  text-shadow: 0 0 1px rgba(0,0,0,0.8);
+  color: white;
 }
-[data-colorpicker=back],
-[data-colorpicker=selection-back],
-[data-colorpicker=selection-border] {
-  .highlighter {
-    border: 1px solid black;
+
+.modal {
+  .btn-toolbar {
+    margin-bottom: 8px;
   }
 }

@@ -12,7 +12,7 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <!-- build:css styles/vendor.css -->
         <!-- bower:css -->
-        <link rel="stylesheet" href="bower_components/spectrum/spectrum.css" />
+        <link rel="stylesheet" href="bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css" />
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
@@ -84,11 +84,11 @@
                   </div>
                   <! Font sizes >
                   <div class="btn-group btn-group-sm">
-                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font Size"><span class="fa fa-text-height"></span> <i class="fa fa-caret-down"></i></a>
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font Size"><span class="fa fa-text-width"></span> <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                       <li class="with-padding">
-                        <div class="input-group">
-                            <input type="number" class="form-control" style="text-align: right;" data-action="fontSize %{value}px">
+                        <div class="input-group input-group-sm">
+                          <input type="number" class="form-control" style="text-align: right;" data-action="fontSize %{value}px">
                           <span class="input-group-addon">px</span>
                         </div>
                       </li>
@@ -121,23 +121,24 @@
                     <a class="btn btn-default" data-edit="justifyright" data-toggle=tooltip data-placement=bottom title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
                     <a class="btn btn-default" data-edit="justifyfull" data-toggle=tooltip data-placement=bottom title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
                   </div>
-                  <! Color picker >
-                  <div class="btn-group btn-group-sm">
-                    <! Font color >
-                    <button class="btn btn-default colorpicker colorpicker-forecolor" data-colorpicker=fore type=button value="#ffffff" data-edit="foreColor %{value}" data-toggle=tooltip title="Font color"/><span class="fa fa-font"></span></button>
-                    <! Highlight color >
-                    <button class="btn btn-default colorpicker colorpicker-backcolor" data-colorpicker=back type=button value="#ffffff" data-edit="backColor %{value}" data-toggle=tooltip title="Highlight color"><span class="highlighter"><span class="fa fa-font"></span></span></button>
+                  <! Fore color picker >
+                  <div class="btn-group btn-group-sm" style="width: 150px; display: inline-block;">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon"><i class="fa fa-font" style="color: black;"></i></span>
+                        <input type=text class="form-control" data-format=hex data-align=left data-colorpicker data-edit="foreColor %{value}" value=success>
+                    </div>
+                  </div>
+
+                  <! Background color picker >
+                  <div class="btn-group btn-group-sm" style="width: 150px; display: inline-block;">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon"><i class="fa fa-font" style="background-color: black; color: white;"></i></span>
+                        <input type=text class="form-control" data-format=hex data-align=left data-colorpicker data-edit="backColor %{value}" value=success>
+                    </div>
                   </div>
                   <! Link >
                   <div class="btn-group btn-group-sm">
-                    <a class="btn btn-default" data-edit="unlink" data-toggle=tooltip data-placement=bottom title="Remove Hyperlink"><i class="fa fa-chain-broken"></i></a>
-                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-placement=bottom title="Hyperlink"><i class="fa fa-link"></i></a>
-                    <ul class="dropdown-menu">
-                      <li class="with-padding">
-                        <input type="text" class="form-control" placeholder="URL" data-edit="createLink %{value}">
-                      </li>
-                    </ul>
-
+                    <a class="btn btn-default" data-action="openModal link" title="Hyperlink"><i class="fa fa-link"></i></a>
                   </div>
 
                   <div class="btn-group btn-group-sm">
@@ -302,6 +303,26 @@
 
                 <! Modals >
                 <div class="" data-role="editor-modals">
+                  <! Link >
+                  <div class="modal fade" data-modal="link">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-body">
+                          <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
+                            <! Url field >
+                            <div class="input-group input-group-sm">
+                              <span class="input-group-addon"><i class="fa fa-link"></i> URL</span>
+                              <input type=text placeholder="" class="form-control input-sm"data-action='addLink %{value}'>
+                              <span class="input-group-btn">
+                                <a class="btn btn-default" data-action='removeLink' data-toggle=tooltip data-placement=bottom title="Set width to auto"><span class="fa fa-times"></span></a>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <! Settings >
                   <div class="modal fade" data-modal="settings">
                     <div class="modal-dialog">
                       <div class="modal-content">
@@ -313,50 +334,81 @@
                         -->
                         <div class="modal-body">
                           <! Width adjustment >
-                          <h5>Width</h5>
                           <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
-                            <div class="btn-group btn-group-sm">
-                              <a class="btn btn-default" data-action='setCss {"width":"auto"}' data-toggle=tooltip data-placement=bottom title="Reset width">Reset width</a>
-                              <a class="btn btn-default" data-action='setCss {"width":"25%"}' data-toggle=tooltip data-placement=bottom title="Set width to 25%">25%</a>
-                              <a class="btn btn-default" data-action='setCss {"width":"50%"}' data-toggle=tooltip data-placement=bottom title="Set width to 50%">50%</a>
-                              <a class="btn btn-default" data-action='setCss {"width":"100%"}' data-toggle=tooltip data-placement=bottom title="Set width to 100%">100%</a>
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <! Width >
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon"><i class="fa fa-arrows-h"></i> Width</span>
+                                  <input type=text placeholder="Custom width" class="form-control input-sm"data-action='setCss {"width":"%{value}"}'>
+                                  <span class="input-group-btn">
+                                    <a class="btn btn-default" data-action='setCss {"width":"100%"}' data-toggle=tooltip data-placement=bottom title="Set width to 100%">100%</a>
+                                    <a class="btn btn-default" data-action='setCss {"width":"auto"}' data-toggle=tooltip data-placement=bottom title="Set width to auto"><span class="fa fa-times"></span></a>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <! Height >
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon"><i class="fa fa-arrows-v"></i> Height</span>
+                                  <input type=text placeholder="Custom height" class="form-control input-sm"data-action='setCss {"height":"%{value}"}'>
+                                  <span class="input-group-btn">
+                                    <a class="btn btn-default" data-action='setCss {"height":"100%"}' data-toggle=tooltip data-placement=bottom title="Set height to 100%">100%</a>
+                                    <a class="btn btn-default" data-action='setCss {"height":"auto"}' data-toggle=tooltip data-placement=bottom title="Set height to auto"><span class="fa fa-times"></span></a>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                            <input type=text placeholder="Custom width" class="form-control input-sm" style="width:100px;" data-action='setCss {"width":"%{value}"}'>
                           </div>
-                          <! Height adjustment >
-                          <h5>Height</h5>
+                          <! Margin and padding adjustment>
                           <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
-                            <div class="btn-group btn-group-sm">
-                              <a class="btn btn-default" data-action='setCss {"height":"auto"}' data-toggle=tooltip data-placement=bottom title="Reset height">Reset height</a>
-                              <a class="btn btn-default" data-action='setCss {"height":"25%"}' data-toggle=tooltip data-placement=bottom title="Set height to 25%">25%</a>
-                              <a class="btn btn-default" data-action='setCss {"height":"50%"}' data-toggle=tooltip data-placement=bottom title="Set height to 50%">50%</a>
-                              <a class="btn btn-default" data-action='setCss {"height":"100%"}' data-toggle=tooltip data-placement=bottom title="Set height to 100%">100%</a>
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <! Margin >
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon">Margin</span>
+                                  <input type=text placeholder="Custom margin" class="form-control" data-action='setCss {"margin":"%{value}"}'>
+                                  <span class="input-group-btn">
+                                    <a class="btn btn-default" data-action='setCss {"margin":""}' data-toggle=tooltip data-placement=bottom title="Reset margin"><span class="fa fa-times"></span></a>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <! Padding >
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon">Padding</span>
+                                  <input type=text placeholder="Custom padding" class="form-control" data-action='setCss {"padding":"%{value}"}'>
+                                  <span class="input-group-btn">
+                                    <a class="btn btn-default" data-action='setCss {"padding":""}' data-toggle=tooltip data-placement=bottom title="Reset padding"><span class="fa fa-times"></span></a>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                            <input type=text placeholder="Custom height" class="form-control input-sm" style="width:100px;" data-action='setCss {"height":"%{value}"}'>
                           </div>
-                          <! Margin adjustment>
-                          <h5>Margin and Padding</h5>
-                          <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
-                            <div class="btn-group btn-group-sm">
-                              <a class="btn btn-default" data-action='setCss {"margin":""}' data-toggle=tooltip data-placement=bottom title="Reset margin">Reset margin</a>
-                              <input type=text placeholder="Custom margin" class="form-control input-sm" style="width:100px;" data-action='setCss {"margin":"%{value}"}'>
-                            </div>
 
-                            <div class="btn-group btn-group-sm">
-                              <a class="btn btn-default" data-action='setCss {"padding":""}' data-toggle=tooltip data-placement=bottom title="Reset margin">Reset padding</a>
-                              <input type=text placeholder="Custom padding" class="form-control input-sm" style="width:100px;" data-action='setCss {"padding":"%{value}"}'>
-                            </div>
-                          </div>
                           <! Color >
-                          <h5>Background color</h5>
                           <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
-                            <div class="btn-group btn-group-sm">
-                              <! Clear colors >
-                              <a class="btn btn-default" data-action='setCss {"background-color":"","border-color":""}' data-toggle=tooltip data-placement=bottom title="Clear all color"><span class="fa fa-times"></span></a>
-                              <! Background color >
-                              <button class="btn btn-default colorpicker colorpicker-backcolor" data-colorpicker="selection-back" type=button value="#ffffff" data-action='setCss {"background-color":"%{value}"}' data-toggle=tooltip title="Selection background color"/><span class="highlighter">&nbsp;&nbsp;&nbsp;</span></button>
-                              <! Border color >
-                              <button class="btn btn-default colorpicker colorpicker-bordercolor" data-colorpicker="selection-border" type=button value="#ffffff" data-action='setCss {"border-color":"%{value}"}' data-toggle=tooltip title="Selection border color"/><span class="highlighter">&nbsp;&nbsp;&nbsp;</span></button>
+                            <div class="row">
+                              <div class="col-sm-6">
+                                <! Background >
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon"><i class="fa fa-square" style="color: black;"></i> Background</span>
+                                  <input type=text class="form-control" data-format=hex data-align=left data-colorpicker data-action='setCss {"background-color":"%{value}"}' value=success>
+                                  <span class="input-group-btn">
+                                    <a class="btn btn-default btn" data-action='setCss {"background-color":""}' data-toggle=tooltip data-placement=bottom title="Clear background color"><span class="fa fa-times"></span></a>
+                                  </span>
+                                </div>
+                              </div>
+                              <div class="col-sm-6">
+                                <! Border >
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon"><i class="fa fa-square-o" style="color: black;"></i> Border</span>
+                                  <input type=text class="form-control" data-format=hex data-align=left data-colorpicker data-action='setCss {"border-color":"%{value}"}' value=success>
+                                  <span class="input-group-btn">
+                                    <a class="btn btn-default btn" data-action='setCss {"border-color":""}' data-toggle=tooltip data-placement=bottom title="Clear border color"><span class="fa fa-times"></span></a>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -374,13 +426,12 @@
             </form>
 
             <br>
-
+            
             <div class="footer">
               <p><span class="fa fa-heart"></span> Pone Z Pyo</p>
             </div>
 
           </div>
-
 
           <!-- build:js scripts/vendor.js -->
           <!-- bower:js -->
@@ -388,8 +439,18 @@
           <script src="bower_components/js-beautify/js/lib/beautify.js"></script>
           <script src="bower_components/js-beautify/js/lib/beautify-css.js"></script>
           <script src="bower_components/jQuery.Hotkeys/jquery.hotkeys.js"></script>
+          <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+          <script src="bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
           <!-- endbower -->
           <!-- endbuild -->
+                          
+          <script>
+              $(function(){
+                  //$('.demo1').colorpicker();
+                  //$('[data-colorpickle]').colorpicker();
+              });
+          </script>
+
 
           <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
           <script>
@@ -414,7 +475,6 @@
           <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/scrollspy.js"></script>
           <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/collapse.js"></script>
           <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tab.js"></script>
-          <script src="bower_components/spectrum/spectrum.js"></script>
           <!-- endbuild -->
           <script src="bower_components/js-beautify/js/lib/beautify-html.js"></script>
 
@@ -427,6 +487,7 @@
           <script src="scripts/04-toolbar-helpers.js"></script>
           <script src="scripts/05-modals.js"></script>
           <script src="scripts/06-copy.js"></script>
+          <script src="scripts/07-colorpicker-helper.js"></script>
           <script src="scripts/app.js"></script>
           <!-- endbuild -->
         </body>

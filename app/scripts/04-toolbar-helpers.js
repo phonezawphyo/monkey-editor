@@ -9,11 +9,14 @@ console.log('04-toolbar-helpers.js');
 
     monkey.toolbarHelpers = {
         colorpicker: function () {
+            /*
             if (!$.spectrum) {
                 return;
             }
+            */
 
-            $('[data-colorpicker]').spectrum({
+            /*
+            spectrum({
                 beforeShow: function () {
                     var $this = $(this);
                     $this.spectrum('set', $this.val());
@@ -33,7 +36,9 @@ console.log('04-toolbar-helpers.js');
                 cancelText: 'Cancel',
                 replacerClassName: 'btn btn-default',
             });
+            */
 
+           /*
             $('[data-colorpicker=fore]')
             .on('change monkey:valueUpdated', function(e) {
                 var $this = $(this),
@@ -41,7 +46,7 @@ console.log('04-toolbar-helpers.js');
                 if (!!e.newValue) {
                     color = e.newValue;
                 } else {
-                    color = $this.spectrum('get').toString();
+                    //color = $this.spectrum('get').toString();
                 }
                 $this
                 .css({'color': color})
@@ -55,7 +60,7 @@ console.log('04-toolbar-helpers.js');
                 if (!!e.newValue) {
                     color = e.newValue;
                 } else {
-                    color = $this.spectrum('get').toString();
+                    //color = $this.spectrum('get').toString();
                 }
                 $this.val(color);
                 $('.highlighter', this)
@@ -69,12 +74,13 @@ console.log('04-toolbar-helpers.js');
                 if (!!e.newValue) {
                     color = e.newValue;
                 } else {
-                    color = $this.spectrum('get').toString();
+                    //color = $this.spectrum('get').toString();
                 }
                 $this.val(color);
                 $('.highlighter', this)
                 .css({'border-color': color});
             });
+            */
         },
 
         imageInserter: function () {
