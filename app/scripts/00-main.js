@@ -1,5 +1,4 @@
 'use strict';
-console.log('00-main.js');
 (function($) {
     /* Core methods */
     var monkey = $.extend(true, {
@@ -477,7 +476,6 @@ console.log('00-main.js');
         });
 
         window.mk = this.mk;
-        console.log(window.mk);
 
         return this;
     };

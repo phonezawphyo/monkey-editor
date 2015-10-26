@@ -1,6 +1,5 @@
 'use strict';
-console.log('02-toolbar.js');
-(function() {
+(function($) {
     String.prototype.parseValue = function(value) {
         return this.replace(/%{value}/,value);
     };
@@ -18,7 +17,7 @@ console.log('02-toolbar.js');
                 disabledClass: 'disabled',
                 enableOnCodeviewSelector: '[data-enable-codeview]',
                 commandBtnSelector: 'a[data-edit],button[data-edit],input[type=button][data-edit]',
-                keydownTriggerInputSelector: 'input[type=text],input[type=number]',
+                keydownTriggerInputSelector: 'input:not([type]),input[type=text],input[type=number]',
                 changeTriggerInputSelector: 'input[type=color],[data-colorpicker]',
                 fileSelector: 'input[type=file]',
                 actionBtnSelector: 'a[data-action],button[data-action],input[type=button][data-action]',
@@ -231,9 +230,15 @@ console.log('02-toolbar.js');
 
                 $(options.selector).find('['+options.actionKey+'^=setCss]').each(function () {
                     var $this =$(this),
-                        cssProps = Object.keys(JSON.parse($this.attr('data-action').split(' ')[1]));
+                        actions = $this.attr('data-action').split(' ')[1];
 
-                    $this.data('css-actions', cssProps);
+                    try {
+                        var cssProps = Object.keys(JSON.parse(actions));
+                        $this.data('css-actions', cssProps);
+                    } catch (e) {
+                        console.error('Failed to parse cssProperty', actions);
+                    }
+
                 });
             },
             updateCssActions: function () {
@@ -246,11 +251,9 @@ console.log('02-toolbar.js');
 
                     for (var k in cssProps) {
                         var prop = cssProps[k],
-                            $target = $(divSelector.target),
-                            style = $target.attr('style') || '',
-                            propInStyle = style.indexOf(prop) > -1,
-                            newValue = propInStyle ? $(divSelector.target).css(prop) : '';
-                        $this.val(newValue);
+                            newValue = (!!divSelector.target) ? divSelector.target.style[prop] : '';
+
+                        $this.val((newValue || ''));
                         $(this).trigger({
                             type: 'monkey:valueUpdated',
                             cssProperty: prop,
@@ -484,4 +487,4 @@ console.log('02-toolbar.js');
         /* Window events */
         $(window).on('resize', toolbar.resetFullscreenWrapperTop);
     });
-})();
+})(jQuery);

@@ -1,5 +1,4 @@
 'use strict';
-console.log('05-modals.js');
 (function() {
     var monkey = window.monkey;
                 

@@ -1,5 +1,4 @@
 'use strict';
-console.log('06-copier.js');
 (function($) {
     var monkey = window.monkey;
     monkey.copier = {

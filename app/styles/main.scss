@@ -1,5 +1,4 @@
 $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
-$fa-font-path: "/bower_components/fontawesome/fonts/";
 
 // bower:scss
 @import "../bower_components/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap.scss";
@@ -94,8 +93,7 @@ body {
     }
 }
 
-
-.colorpicker {
-  min-width: 125px;
-  z-index: 1051;
+.fa {
+  font-size: 12px;
+  line-height: 1.5;
 }

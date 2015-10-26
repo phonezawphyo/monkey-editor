@@ -8,15 +8,19 @@
         <title>Monkey Editor</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
+        <!--
         <link rel="shortcut icon" href="/favicon.ico">
+        -->
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <!-- build:css styles/vendor.css -->
+        <!-- dummy-build:css styles/vendor.css -->
         <!-- bower:css -->
-        <link rel="stylesheet" href="bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css" />
         <!-- endbower -->
-        <!-- endbuild -->
+        <!-- dummy-endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+        <!-- build:css(.tmp) styles/monkey-editor.css -->
+        <link rel="stylesheet" href="styles/bootstrap-colorpicker.css">
         <link rel="stylesheet" href="styles/monkey-editor.css">
         <!-- endbuild -->
     </head>
@@ -42,14 +46,14 @@
 
                 <div class="btn-toolbar" data-role="editor-toolbar" data-target="#monkey-editor">
                   <div class="btn-group btn-group-sm">
-                    <! Code view >
+                    <!-- Code view -->
                     <a class="btn btn-default" data-action="codeview" data-enable-codeview data-toggle=tooltip data-placement=bottom title="Code View"><i class="fa fa-code"></i></a>
-                    <! Fullscreen >
+                    <!-- Fullscreen -->
                     <a class="btn btn-default" data-action="fullscreen" data-enable-codeview data-toggle=tooltip data-placement=bottom title="Fullscreen"><i class="fa fa-arrows-alt"></i></a>
                   </div>
 
                   <div class="btn-group btn-group-sm">
-                    <! Styles>
+                    <!-- Styles-->
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-magic"></i> <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                       <li><a data-edit="formatBlock <div>">Normal</a></li>
@@ -62,7 +66,7 @@
                       <li><a data-edit="formatBlock <h6>"><h6>H6</h6></a></li>
                     </ul>
                   </div>
-                  <! Font families >
+                  <!-- Font families -->
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-font"></i> <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
@@ -82,7 +86,7 @@
                       <li><a data-edit="fontName Times New Roman" style="font-family:'Times New Roman'">Times New Roman</a></li>
                       <li><a data-edit="fontName Verdana" style="font-family:'Verdana'">Verdana</a></li></ul>
                   </div>
-                  <! Font sizes >
+                  <!-- Font sizes -->
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font Size"><span class="fa fa-text-width"></span> <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
@@ -101,7 +105,7 @@
                       <li><a data-action="fontSize 15px">15px</a></li>
                     </ul>
                   </div>
-                  <! General formatters >
+                  <!-- General formatters -->
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-default" data-edit="bold" data-toggle=tooltip data-placement=bottom title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
                     <a class="btn btn-default" data-edit="italic" data-toggle=tooltip data-placement=bottom title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
@@ -121,7 +125,7 @@
                     <a class="btn btn-default" data-edit="justifyright" data-toggle=tooltip data-placement=bottom title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
                     <a class="btn btn-default" data-edit="justifyfull" data-toggle=tooltip data-placement=bottom title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
                   </div>
-                  <! Fore color picker >
+                  <!-- Fore color picker -->
                   <div class="btn-group btn-group-sm" style="width: 150px; display: inline-block;">
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon"><i class="fa fa-font" style="color: black;"></i></span>
@@ -129,20 +133,20 @@
                     </div>
                   </div>
 
-                  <! Background color picker >
+                  <!-- Background color picker -->
                   <div class="btn-group btn-group-sm" style="width: 150px; display: inline-block;">
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon"><i class="fa fa-font" style="background-color: black; color: white;"></i></span>
                         <input type=text class="form-control" data-format=hex data-align=left data-colorpicker data-edit="backColor %{value}" value=success>
                     </div>
                   </div>
-                  <! Link >
+                  <!-- Link -->
                   <div class="btn-group btn-group-sm">
                     <a class="btn btn-default" data-action="openModal link" title="Hyperlink"><i class="fa fa-link"></i></a>
                   </div>
 
                   <div class="btn-group btn-group-sm">
-                    <! Table >
+                    <!-- Table -->
                     <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-table"></i> <i class=" fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
                       <li data-monkey-table-picker>
@@ -150,7 +154,7 @@
                     </ul>
                   </div>
 
-                  <! Image upload>
+                  <!-- Image upload-->
                   <div class="btn-group btn-group-sm">
                     <div class="btn btn-default" title="" id="pictureBtn" data-toggle="tooltip" data-placement=bottom data-original-title="Insert picture (or just drag &amp; drop)"><i class="fa fa-picture-o"></i>
                       <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;" data-monkey-image-inserter>
@@ -161,155 +165,29 @@
                     <a class="btn btn-default" data-edit="redo" data-toggle=tooltip data-placement=bottom title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
                   </div>
                   <div class="btn-group btn-group-sm">
-                    <! Page Header>
+                    <!-- Page Header-->
                     <a class="btn btn-default" data-edit="insertHTML <div class='page-header'><h1>Page Header <small>Small Text</small></h1></div>" data-toggle=tooltip data-placement=bottom title="Page Header">Page Header</a>
-                    <! Panel >
+                    <!-- Panel -->
                     <a class="btn btn-default" data-edit="insertHTML <div class='panel panel-default'><div class='panel-heading'>Panel Heading</div><div class='panel-body'>Panel Body</div></div>" data-toggle=tooltip data-placement=bottom title="Panel">Panel</a>
-                    <! Jumbotron >
+                    <!-- Jumbotron -->
                     <a class="btn btn-default" data-edit="insertHTML <div class='jumbotron'><h1>Jumbotron</h1></div>" data-toggle=tooltip data-placement=bottom title="Jumbotron">Jumbotron</a>
                   </div>
                   <input type="text" data-edit="inserttext" id="voiceBtn" x-webkit-speech="" style="display: none;">
                 </div>
                 <textarea class="form-control" id="monkey-editor" data-monkey-editor>
-                  <div>
-<table class="table table-bordered">
-    <tbody>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-    </tbody>
-  </table>
-                  </div>
                 </textarea>
 
                 <br>
 
-                <! Modals >
+                <!-- Modals -->
                 <div class="" data-role="editor-modals">
-                  <! Link >
+                  <!-- Link -->
                   <div class="modal fade" data-modal="link">
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-body">
                           <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
-                            <! Url field >
+                            <!-- Url field -->
                             <div class="input-group input-group-sm">
                               <span class="input-group-addon"><i class="fa fa-link"></i> URL</span>
                               <input type=text placeholder="" class="form-control input-sm"data-action='addLink %{value}'>
@@ -322,25 +200,19 @@
                       </div>
                     </div>
                   </div>
-                  <! Settings >
+                  <!-- Settings -->
                   <div class="modal fade" data-modal="settings">
                     <div class="modal-dialog">
                       <div class="modal-content">
-                        <!--
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                          <h4 class="modal-title">Settings</h4>
-                        </div>
-                        -->
                         <div class="modal-body">
-                          <! Width adjustment >
+                          <!-- Width adjustment -->
                           <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
                             <div class="row">
                               <div class="col-sm-6">
-                                <! Width >
+                                <!-- Width -->
                                 <div class="input-group input-group-sm">
                                   <span class="input-group-addon"><i class="fa fa-arrows-h"></i> Width</span>
-                                  <input type=text placeholder="Custom width" class="form-control input-sm"data-action='setCss {"width":"%{value}"}'>
+                                  <input type=text placeholder="Custom width" class="form-control input-sm"data-action="setCss {&quot;width&quot;:&quot;%{value}&quot;}">
                                   <span class="input-group-btn">
                                     <a class="btn btn-default" data-action='setCss {"width":"100%"}' data-toggle=tooltip data-placement=bottom title="Set width to 100%">100%</a>
                                     <a class="btn btn-default" data-action='setCss {"width":"auto"}' data-toggle=tooltip data-placement=bottom title="Set width to auto"><span class="fa fa-times"></span></a>
@@ -348,7 +220,7 @@
                                 </div>
                               </div>
                               <div class="col-sm-6">
-                                <! Height >
+                                <!-- Height -->
                                 <div class="input-group input-group-sm">
                                   <span class="input-group-addon"><i class="fa fa-arrows-v"></i> Height</span>
                                   <input type=text placeholder="Custom height" class="form-control input-sm"data-action='setCss {"height":"%{value}"}'>
@@ -360,64 +232,59 @@
                               </div>
                             </div>
                           </div>
-                          <! Margin and padding adjustment>
+                          <!-- Margin and padding adjustment-->
                           <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
                             <div class="row">
                               <div class="col-sm-6">
-                                <! Margin >
+                                <!-- Margin -->
                                 <div class="input-group input-group-sm">
                                   <span class="input-group-addon">Margin</span>
-                                  <input type=text placeholder="Custom margin" class="form-control" data-action='setCss {"margin":"%{value}"}'>
+                                  <input type=text placeholder="Custom margin"
+                                  class="form-control" data-action='setCss {"margin":"%{value}"}'>
                                   <span class="input-group-btn">
-                                    <a class="btn btn-default" data-action='setCss {"margin":""}' data-toggle=tooltip data-placement=bottom title="Reset margin"><span class="fa fa-times"></span></a>
+                                    <a class="btn btn-default" data-action='setCss {"margin":&quot;&quot;}' data-toggle=tooltip data-placement=bottom title="Reset margin"><span class="fa fa-times"></span></a>
                                   </span>
                                 </div>
                               </div>
                               <div class="col-sm-6">
-                                <! Padding >
+                                <!-- Padding -->
                                 <div class="input-group input-group-sm">
                                   <span class="input-group-addon">Padding</span>
                                   <input type=text placeholder="Custom padding" class="form-control" data-action='setCss {"padding":"%{value}"}'>
                                   <span class="input-group-btn">
-                                    <a class="btn btn-default" data-action='setCss {"padding":""}' data-toggle=tooltip data-placement=bottom title="Reset padding"><span class="fa fa-times"></span></a>
+                                    <a class="btn btn-default" data-action='setCss {"padding":&quot;&quot;}' data-toggle=tooltip data-placement=bottom title="Reset padding"><span class="fa fa-times"></span></a>
                                   </span>
                                 </div>
                               </div>
                             </div>
                           </div>
 
-                          <! Color >
+                          <!-- Color -->
                           <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
                             <div class="row">
                               <div class="col-sm-6">
-                                <! Background >
+                                <!-- Background -->
                                 <div class="input-group input-group-sm">
                                   <span class="input-group-addon"><i class="fa fa-square" style="color: black;"></i> Background</span>
                                   <input type=text class="form-control" data-format=hex data-align=left data-colorpicker data-action='setCss {"background-color":"%{value}"}' value=success>
                                   <span class="input-group-btn">
-                                    <a class="btn btn-default btn" data-action='setCss {"background-color":""}' data-toggle=tooltip data-placement=bottom title="Clear background color"><span class="fa fa-times"></span></a>
+                                    <a class="btn btn-default btn" data-action='setCss {"background-color":&quot;&quot;}' data-toggle=tooltip data-placement=bottom title="Clear background color"><span class="fa fa-times"></span></a>
                                   </span>
                                 </div>
                               </div>
                               <div class="col-sm-6">
-                                <! Border >
+                                <!-- Border -->
                                 <div class="input-group input-group-sm">
                                   <span class="input-group-addon"><i class="fa fa-square-o" style="color: black;"></i> Border</span>
                                   <input type=text class="form-control" data-format=hex data-align=left data-colorpicker data-action='setCss {"border-color":"%{value}"}' value=success>
                                   <span class="input-group-btn">
-                                    <a class="btn btn-default btn" data-action='setCss {"border-color":""}' data-toggle=tooltip data-placement=bottom title="Clear border color"><span class="fa fa-times"></span></a>
+                                    <a class="btn btn-default btn" data-action='setCss {"border-color":&quot;&quot;}' data-toggle=tooltip data-placement=bottom title="Clear border color"><span class="fa fa-times"></span></a>
                                   </span>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <!--
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                        -->
                       </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                   </div><!-- /.modal -->
@@ -428,39 +295,15 @@
             <br>
             
             <div class="footer">
-              <p><span class="fa fa-heart"></span> Pone Z Pyo</p>
+              <p><span class="fa fa-heart"></span> Pone Z Pyo phonezawphyo@gmail.com</p>
             </div>
-
           </div>
 
           <!-- build:js scripts/vendor.js -->
           <!-- bower:js -->
           <script src="bower_components/jquery/dist/jquery.js"></script>
-          <script src="bower_components/js-beautify/js/lib/beautify.js"></script>
-          <script src="bower_components/js-beautify/js/lib/beautify-css.js"></script>
-          <script src="bower_components/jQuery.Hotkeys/jquery.hotkeys.js"></script>
-          <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-          <script src="bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
           <!-- endbower -->
           <!-- endbuild -->
-                          
-          <script>
-              $(function(){
-                  //$('.demo1').colorpicker();
-                  //$('[data-colorpickle]').colorpicker();
-              });
-          </script>
-
-
-          <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-          <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-                                                                    function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X');ga('send','pageview');
-          </script>
 
           <!-- build:js scripts/plugins.js -->
           <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/affix.js"></script>
@@ -476,9 +319,12 @@
           <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/collapse.js"></script>
           <script src="bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tab.js"></script>
           <!-- endbuild -->
-          <script src="bower_components/js-beautify/js/lib/beautify-html.js"></script>
 
-          <!-- build:js({app,.tmp}) scripts/main.js -->
+
+          <!-- build:js({app,.tmp}) scripts/monkey-editor.js -->
+          <script src="bower_components/js-beautify/js/lib/beautify-html.js"></script>
+          <script src="bower_components/jQuery.Hotkeys/jquery.hotkeys.js"></script>
+          <script src="bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
           <script src="scripts/00-main.js"></script>
           <script src="scripts/01-div-selector.js"></script>
           <script src="scripts/02-toolbar.js"></script>

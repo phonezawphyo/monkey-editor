@@ -63,7 +63,9 @@ module.exports = function (grunt) {
                 files: ['Gruntfile.js']
             },
             compass: {
-                files: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
+                files: [
+                  '<%= config.app %>/styles/{,*/}*.{scss,sass}',
+                ],
                 tasks: ['compass:server', 'autoprefixer']
             },
             styles: {
@@ -205,11 +207,21 @@ module.exports = function (grunt) {
             app: {
                 src: ['<%= config.app %>/index.html'],
                 ignorePath: '<%= config.app %>/',
-                exclude: ['<%= config.app %>/bower_components/bootstrap-sass/vendor/assets/javascripts/bootstrap.js']
+                exclude: [
+                    '<%= config.app %>/bower_components/bootstrap-sass/vendor/assets/javascripts/bootstrap.js',
+                    '<%= config.app %>/bower_components/bootstrap/dist/js/bootstrap.js',
+                    '<%= config.app %>/bower_components/js-beautify/js/lib/beautify.js',
+                    '<%= config.app %>/bower_components/js-beautify/js/lib/beautify-css.js',
+                    '<%= config.app %>/bower_components/jQuery.Hotkeys/jquery.hotkeys.js',
+                    '<%= config.app %>/bower_components/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
+                    '<%= config.app %>/bower_components/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css'
+                ]
             },
             sass: {
                 src: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
-                ignorePath: '<%= config.app %>/bower_components/'
+                //ignorePath: '<%= config.app %>/bower_components/',
+                exclude: [
+                ]
             }
         },
 
@@ -244,7 +256,9 @@ module.exports = function (grunt) {
                 assetsDirs: ['<%= config.dist %>', '<%= config.dist %>/images']
             },
             html: ['<%= config.dist %>/{,*/}*.html'],
-            css: ['<%= config.dist %>/styles/{,*/}*.css']
+            css: [
+              '<%= config.dist %>/styles/{,*/}*.css',
+            ]
         },
 
         // The following *-min tasks produce minified files in the dist folder
@@ -317,12 +331,14 @@ module.exports = function (grunt) {
             options: {
                 separator: ';',
             },
+            /*
             mainApp: {
                 // the files to concatenate
                 src: fileLists.mainApp,
                 // the location of the resulting JS file
                 dest: '<%= paths.dist %>/scripts/monkey-editor.js',
             },
+            */
             dist: {}
         },
 
@@ -340,8 +356,22 @@ module.exports = function (grunt) {
                         'images/{,*/}*.webp',
                         '{,*/}*.html',
                         'styles/fonts/{,*/}*.*',
-                        'bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/*.*'
+                        'bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/*.*',
                     ]
+                }, {
+                    // for font-awesome
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= config.app %>/bower_components/fontawesome',
+                    src: ['fonts/*.*'],
+                    dest: '<%= config.dist %>'
+                }, {
+                    // for colorpicker image 
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= config.app %>',
+                    src: ['img/{,*/}*.*'],
+                    dest: '<%= config.dist %>'
                 }]
             },
             styles: {
@@ -415,7 +445,7 @@ module.exports = function (grunt) {
         'cssmin',
         'uglify',
         'copy:dist',
-        'rev',
+        //'rev',
         'usemin',
         'htmlmin'
     ]);

@@ -1,5 +1,4 @@
 'use strict';
-console.log('03-space-divs.js');
 (function($) {
     var monkey = window.monkey;
     monkey.spaceDivs = {

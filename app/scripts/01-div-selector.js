@@ -1,5 +1,4 @@
 'use strict';
-console.log('01-div-selector.js');
 (function($) {
     var monkey = window.monkey;
     monkey.divSelector = {
