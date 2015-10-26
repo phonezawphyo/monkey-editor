@@ -27,6 +27,7 @@
             }, options);
 
             /* Utilities */
+            this.applyChanges = monkey.fn.applyChanges;
             this.execCallbacks = monkey.fn.execCallbacks;
             this.extendOptions = monkey.fn.extendOptions;
             this.switchView = monkey.fn.switchView;
@@ -51,6 +52,9 @@
         },
 
         fn: {
+            applyChanges: function (val) {
+                this.$.val(val);
+            },
             execCallbacks: function (callbacks, e) {
                 if (!!callbacks) {
                     if (callbacks instanceof Array) {
@@ -162,6 +166,7 @@
     /* Editor related methods */
     monkey.editor = {
         klass: function (monkeyEditor) {
+            var self = this;
             this.mk = monkeyEditor;
             this.$ = monkey.editor.views.makeEditor(this.mk);
             this.$.appendTo(this.mk.wrapper.$);
@@ -170,6 +175,7 @@
             var fn = monkey.editor.fn;
             this.code = fn.code;
             this.execCommand = fn.execCommand;
+            this.cleanEditingLayers = fn.cleanEditingLayers;
 
             this.nextInsertId = fn.nextInsertId;
             this.insertAtCaret = fn.insertAtCaret;
@@ -194,6 +200,9 @@
             this.$.on('dragleave dragend drop', function() {
                 $(this).removeClass('dragover');
             });
+            this.$.on('blur', function() {
+                self.mk.applyChanges(self.code());
+            });
             this.$.on('drop', bindings.fileDrop);
             this.mk.$.on('monkey:beforeViewSwitch', bindings.beforeViewSwitch);
             this.mk.$.on('monkey:afterViewSwitch', bindings.afterViewSwitch);
@@ -205,8 +214,18 @@
                 .attr({contenteditable: true});
             },
         },
+        callbacks: {
+            cleanEditingLayers: [],
+        },
         fn: {
+            cleanEditingLayers: function () {
+                var self = this;
+                monkey.editor.callbacks.cleanEditingLayers.forEach(function execCallbacksEach(fn) {
+                    fn.call(self);
+                });
+            },
             code: function () {
+                this.cleanEditingLayers();
                 return this.$.html();
             },
             execCommand: function (commandAndArgs, value) {
@@ -404,6 +423,7 @@
 
     monkey.codeview = {
         klass: function (monkeyEditor) {
+            var self = this;
             this.mk = monkeyEditor;
             this.options = this.mk.options;
             this.$ = monkey.codeview.views.makeCodeview(monkeyEditor).appendTo(this.mk.wrapper.$);
@@ -412,6 +432,9 @@
             /* Bindings */
             this.mk.$.on('monkey:beforeViewSwitch', monkey.codeview.bindings.beforeViewSwitch);
             this.mk.$.on('monkey:afterViewSwitch', monkey.codeview.bindings.afterViewSwitch);
+            this.$.on('blur', function() {
+                self.mk.applyChanges(self.code());
+            });
         },
         views: {
             makeCodeview: function(monkeyEditor) {
@@ -453,7 +476,7 @@
 
     $.fn.monkeyEditor = function (options) {
         options = options || {};
-        this.hide();
+        this.css({height:'0px',width:'0px',opacity: 0, position: 'absolute'});
         this.mk = new monkey.klass(this, options);
         this.data('monkey-editor', this.mk);
         this.data('options', this.mk.options);

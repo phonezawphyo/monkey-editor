@@ -236,4 +236,8 @@
         editor.$.on('click', monkey.divSelector.bindings.editorClick);
     });
 
+    monkey.editor.callbacks.cleanEditingLayers.push(function() {
+        this.mk.divSelector.$.remove();
+    });
+
 })(jQuery);
