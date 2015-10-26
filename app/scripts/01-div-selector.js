@@ -237,7 +237,11 @@
     });
 
     monkey.editor.callbacks.cleanEditingLayers.push(function() {
-        this.mk.divSelector.$.remove();
+        var $box = this.mk.divSelector.$;
+
+        if (!!$box) {
+            $box.remove();
+        }
     });
 
 })(jQuery);
