@@ -227,41 +227,36 @@ console.log('02-toolbar.js');
                 });
             },
             storeCssActions: function () {
-                var options = this.options.toolbar,
-                    mk = this.mk,
-                    divSelector = this.mk.divSelector,
-                    target = divSelector.target;
+                var options = this.options.toolbar;
 
                 $(options.selector).find('['+options.actionKey+'^=setCss]').each(function () {
-                  var $this =$(this),
-                      cssProps = Object.keys(JSON.parse($this.attr('data-action').split(' ')[1]));
+                    var $this =$(this),
+                        cssProps = Object.keys(JSON.parse($this.attr('data-action').split(' ')[1]));
 
-                  $this.data('css-actions', cssProps);
+                    $this.data('css-actions', cssProps);
                 });
             },
             updateCssActions: function () {
                 var options = this.options.toolbar,
-                    mk = this.mk,
-                    divSelector = this.mk.divSelector,
-                    target = divSelector.target;
+                    divSelector = this.mk.divSelector;
 
                 $(options.selector).find('['+options.actionKey+'^=setCss]').each(function () {
-                  var $this =$(this),
-                      cssProps = $this.data('css-actions');
+                    var $this =$(this),
+                        cssProps = $this.data('css-actions');
 
-                      for (var k in cssProps) {
-                          var prop = cssProps[k],
-                              $target = $(divSelector.target),
-                              style = $target.attr('style') || '', 
-                              propInStyle = style.indexOf(prop) > -1,
-                              newValue = propInStyle ? $(divSelector.target).css(prop) : '';
-                          $this.val(newValue);
-                          $(this).trigger({
-                              type: 'monkey:valueUpdated',
-                              cssProperty: prop,
-                              newValue: newValue,
-                          });
-                      }
+                    for (var k in cssProps) {
+                        var prop = cssProps[k],
+                            $target = $(divSelector.target),
+                            style = $target.attr('style') || '',
+                            propInStyle = style.indexOf(prop) > -1,
+                            newValue = propInStyle ? $(divSelector.target).css(prop) : '';
+                        $this.val(newValue);
+                        $(this).trigger({
+                            type: 'monkey:valueUpdated',
+                            cssProperty: prop,
+                            newValue: newValue,
+                        });
+                    }
                 });
             },
             updateAddLink: function () {
@@ -275,27 +270,27 @@ console.log('02-toolbar.js');
                     $selector = $(options.selector).find('['+options.actionKey+'^='+keyword+']');
 
                 $selector.each(function () {
-                  var $this =$(this),
-                      $parent = $target.parent();
+                    var $this =$(this),
+                        $parent = $target.parent();
 
-                  if (editor.isSelectionCollapsed()) {
-                      if (!!$parent && $parent.is('a')) {
-                          newValue = $parent.attr('href');
-                      }
-                  } else {
-                      var node = document.getSelection().anchorNode.parentNode,
-                          $node = $(node);
-                      if ($node.is('a')) {
-                        newValue = $node.attr('href');
-                      }
-                  }
+                    if (editor.isSelectionCollapsed()) {
+                        if (!!$parent && $parent.is('a')) {
+                            newValue = $parent.attr('href');
+                        }
+                    } else {
+                        var node = document.getSelection().anchorNode.parentNode,
+                            $node = $(node);
+                        if ($node.is('a')) {
+                            newValue = $node.attr('href');
+                        }
+                    }
 
-                  $this.val(newValue);
-                  $this.trigger({
-                    type: 'monkey:valueUpdated',
-                    keyword: keyword,
-                    newValue: newValue,
-                  });
+                    $this.val(newValue);
+                    $this.trigger({
+                        type: 'monkey:valueUpdated',
+                        keyword: keyword,
+                        newValue: newValue,
+                    });
                 });
             },
 
@@ -488,9 +483,5 @@ console.log('02-toolbar.js');
 
         /* Window events */
         $(window).on('resize', toolbar.resetFullscreenWrapperTop);
-    });
-
-    // Translations
-    monkey.fn.extendLocales({
     });
 })();

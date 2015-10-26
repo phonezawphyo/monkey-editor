@@ -10,9 +10,6 @@ console.log('00-main.js');
 
             /** Default options */
             this.options = $.extend(true, {
-                // Set locale
-                locale: 'en',
-
                 // Set height of editable area
                 height: 450,
 
@@ -36,9 +33,6 @@ console.log('00-main.js');
             this.switchView = monkey.fn.switchView;
             this.toggleFullscreen = monkey.fn.toggleFullscreen;
             this.tidyHtml = monkey.fn.tidyHtml;
-
-            /* Set translations */
-            this.t = monkey.locales[this.options.locale];
             
             /* Init wrapper with resizer */
             this.wrapper = new monkey.wrapper.klass(this);
@@ -71,9 +65,6 @@ console.log('00-main.js');
                         return callbacks.call(this, e);
                     }
                 }
-            },
-            extendLocales: function (extLocales) {
-                monkey.locales = $.extend(true, extLocales, monkey.locales);
             },
             extendOptions: function(extOptions) {
                 this.options = $.extend(true, extOptions, this.options);
@@ -111,10 +102,6 @@ console.log('00-main.js');
             /* jshint ignore:end */
         },
         bindings: {
-        },
-
-        locales: {
-            en: {},
         },
     }, (window.monkey || {}));
 

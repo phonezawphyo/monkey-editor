@@ -74,8 +74,4 @@ console.log('05-modals.js');
             });
         }
     });
-
-    // Translations
-    monkey.fn.extendLocales({
-    });
 })();
