@@ -4,8 +4,8 @@
     monkey.divSelector = {
         options: {
             divSelector: {
-                selectableTags: ['DIV','TABLE','IMG','TD','P','BLOCKQUOTE','CODE','H1','H2','H3','H4','H5','H6','H7','OL','UL','LI','IFRAME','EMBED','VIDEO'],
-                uneditableTags: ['TD','LI'],
+                selectableTags: ['DIV','TABLE','IMG','TR','TD','P','BLOCKQUOTE','CODE','H1','H2','H3','H4','H5','H6','H7','OL','UL','LI','IFRAME','EMBED','VIDEO'],
+                uneditableTags: ['TR','TD','LI'],
                 selectionBoxClass: 'mk-selection-box',
                 selectionBoxToolbarClass: 'mk-selection-box-tools',
             },
@@ -182,8 +182,19 @@
             editorClick: function (e) {
                 var target = e.target,
                     divSelector = $(this).data('div-selector'),
-                    closest = $(e.target).closest(divSelector.selectableTags.join(',')),
-                    isEditor = (closest[0] === this);
+                    sel = window.getSelection(),
+                    isEditor,
+                    closest;
+                    
+                if (!sel.isCollapsed) {
+                    var common = sel.getRangeAt(0).commonAncestorContainer;
+                    if (!!common) {
+                        target = common;
+                    }
+                }
+
+                closest = $(target).closest(divSelector.selectableTags.join(','));
+                isEditor = (closest[0] === this);
 
                 if (!isEditor && target !== this) {
                     /* Target is selectable */

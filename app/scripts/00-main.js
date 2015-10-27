@@ -374,7 +374,10 @@
                 window.getSelection().addRange(range);
             },
             saveSelection: function () {
-                this.selectedRange = this.getCurrentRange();
+                var rng = this.getCurrentRange();
+                if (!!rng) {
+                    this.selectedRange = rng;
+                }
             },
             isSelectionCollapsed: function () {
                 if (!!this.selectedRange) {

@@ -43,7 +43,7 @@
   /* Selection hint */
   div,table,img,iframe,embed,video {
     min-height: 20px;
-    border-left: 5px dotted rgba(0,0,0,0.1);
+    border-left: 5px dotted rgba(0,0,0,0.1) !important;
     //outline: 1px dashed rgba(0,0,0,0.2);
     border-collapse: separate;
 
@@ -89,7 +89,7 @@
     $margin-color: rgba(250,160,0,0.3);
     min-height: 20px;
     min-width: 20px;
-    border: 2px dashed $select-color;
+    border: 2px dashed $select-color !important;
     position: absolute;
     top: 0;
     left: 0;

@@ -87,17 +87,32 @@
 
             },
             fontSize: function (size) {
-                var sel= window.getSelection(),
-                    text = sel.toString(),
+                var editor = this,
+                    mk = editor.mk,
+                    divSelector = mk.divSelector,
+                    sel= window.getSelection(),
                     rng = sel.getRangeAt(0),
+                    isSelectionAcrossElements = !!sel.getRangeAt(0).commonAncestorContainer.tagName,
                     parent = rng.commonAncestorContainer;
 
-                if (parent.nodeType !== 1) {
-                    parent = parent.parentNode;
+                if (size==='px' || !size) {
+                    size = '';
                 }
 
-                if (!sel.isCollapsed) {
-                    var $parent = $(parent);
+                if (sel.isCollapsed || isSelectionAcrossElements) {
+                    if (!!divSelector.lastSelectedTarget) {
+                        $(divSelector.lastSelectedTarget).css({
+                            'font-size': size,
+                        });
+                    }
+                } else {
+                    // If text node
+                    if (parent.nodeType !== 1) {
+                        parent = parent.parentNode;
+                    }
+                    // Selection in a single line
+                    var $parent = $(parent),
+                        text = sel.toString();
                     if ($parent.text().trim() === text.trim()) {
                         $parent.css({
                             'font-size': size,
@@ -105,7 +120,7 @@
                         $parent.children('span').each(function() {
                             var $this = $(this);
                             $this.css({'font-size': ''});
-                            if ($this.styles.length === 0) {
+                            if ($this[0].style.length === 0) {
                                 $this.after($this.contents());
                                 $this.remove();
                             }
@@ -445,15 +460,11 @@
         .click(monkey.toolbar.bindings.btnClick);
 
         // Editor
-        // editor.$.on('mouseup keyup mouseout', function() {
-        //     editor.saveSelection();
-        //     toolbar.update();
-        // });
         editor.$
         .on('mouseup monkey:afterSelectDiv', function() {
             toolbar.update();
         })
-        .on('blur', function() {
+        .on('mouseup keyup', function() {
             editor.saveSelection();
         });
 
