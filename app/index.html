@@ -125,6 +125,16 @@
                     <a class="btn btn-default" data-edit="justifyright" data-toggle=tooltip data-placement=bottom title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
                     <a class="btn btn-default" data-edit="justifyfull" data-toggle=tooltip data-placement=bottom title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
                   </div>
+
+                  <div class="btn-group btn-group-sm">
+                    <!-- Table -->
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-table"></i> <i class=" fa fa-caret-down"></i></a>
+                    <ul class="dropdown-menu">
+                      <li data-monkey-table-picker>
+                      </li>
+                    </ul>
+                  </div>
+
                   <!-- Fore color picker -->
                   <div class="btn-group btn-group-sm" style="width: 150px; display: inline-block;">
                     <div class="input-group input-group-sm">
@@ -140,21 +150,10 @@
                         <input type=text class="form-control" data-format=hex data-align=left data-colorpicker data-edit="backColor %{value}" value=success>
                     </div>
                   </div>
-                  <!-- Link -->
-                  <div class="btn-group btn-group-sm">
-                    <a class="btn btn-default" data-action="openModal link" data-toggle=tooltip title="Hyperlink"><i class="fa fa-link"></i></a>
-                  </div>
 
                   <div class="btn-group btn-group-sm">
-                    <!-- Table -->
-                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-toggle=tooltip data-placement=bottom title="Font"><i class="fa fa-table"></i> <i class=" fa fa-caret-down"></i></a>
-                    <ul class="dropdown-menu">
-                      <li data-monkey-table-picker>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div class="btn-group btn-group-sm">
+                    <!-- Link -->
+                    <a class="btn btn-default" data-action="openModal link" data-toggle=tooltip data-placement=bottom title="Hyperlink"><i class="fa fa-link"></i></a>
                     <!-- Insert embed -->
                     <a class="btn btn-default" data-action="openModal embed" data-toggle=tooltip data-placement=bottom title="Video/Embed"><i class="fa fa-youtube-play"></i></a>
                     <!-- Image upload-->

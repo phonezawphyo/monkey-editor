@@ -25,11 +25,11 @@ module.exports = function (grunt) {
         },
     };
 
-    var fileLists = {
-        mainApp: [
-            '<%= paths.src.mainApp %>/scripts/**/*.js'
-        ],
-    };
+    // var fileLists = {
+    //     mainApp: [
+    //         '<%= paths.src.mainApp %>/scripts/**/*.js'
+    //     ],
+    // };
 
     // Define the configuration for all the tasks
     grunt.initConfig({
@@ -64,7 +64,7 @@ module.exports = function (grunt) {
             },
             compass: {
                 files: [
-                  '<%= config.app %>/styles/{,*/}*.{scss,sass}',
+                    '<%= config.app %>/styles/{,*/}*.{scss,sass}',
                 ],
                 tasks: ['compass:server', 'autoprefixer']
             },
@@ -257,7 +257,7 @@ module.exports = function (grunt) {
             },
             html: ['<%= config.dist %>/{,*/}*.html'],
             css: [
-              '<%= config.dist %>/styles/{,*/}*.css',
+                '<%= config.dist %>/styles/{,*/}*.css',
             ]
         },
 

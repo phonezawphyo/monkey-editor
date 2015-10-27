@@ -157,9 +157,7 @@
             },
             inputKeydown: function(e) {
                 var $this = $(this),
-                    mk = $this.data('monkey-editor'),
-                    command = $this.attr(mk.options.toolbar.commandKey),
-                    action = $this.attr(mk.options.toolbar.actionKey);
+                    mk = $this.data('monkey-editor');
 
                 /* Return key */
                 if (e.keyCode === 13) {
@@ -215,9 +213,9 @@
             processAction: function (actionAndArgs) {
                 var arr = actionAndArgs.split(' '),
                     action = arr.shift(),
-                    arr = arr.join(' ');
+                    param = arr.join(' ');
 
-                monkey.toolbar.actions[action].apply(this, [arr]);
+                monkey.toolbar.actions[action].apply(this, [param]);
 
                 this.mk.$.trigger({
                     type: 'monkey:execAction',

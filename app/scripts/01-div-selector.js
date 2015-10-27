@@ -223,16 +223,19 @@
         editor.$.on('monkey:afterUnselectDiv', function () {
             divSelector.toggleSelectionBox(false);
         });
-        editor.$.on('monkey:insertNode', function (e) {
-            divSelector.triggerSelect(e.insertTarget);
-            editor.focus();
-        });
         editor.$.on('blur', function () {
             divSelector.triggerUnselect();
         });
         this.$.on('monkey:beforeViewSwitch', function (e) {
             if (e.toView !== editor) {
                 editor.$.find('.'+self.options.divSelector.selectionBoxClass).remove();
+            }
+        })
+        .on('monkey:execCommand', function(e) {
+            if (e.command === 'insertHTML' && !!e.insertedElement) {
+                setTimeout(function() {
+                    divSelector.triggerSelect(e.insertedElement);
+                });
             }
         });
 
