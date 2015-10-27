@@ -142,7 +142,7 @@
                   </div>
                   <!-- Link -->
                   <div class="btn-group btn-group-sm">
-                    <a class="btn btn-default" data-action="openModal link" title="Hyperlink"><i class="fa fa-link"></i></a>
+                    <a class="btn btn-default" data-action="openModal link" data-toggle=tooltip title="Hyperlink"><i class="fa fa-link"></i></a>
                   </div>
 
                   <div class="btn-group btn-group-sm">
@@ -154,8 +154,10 @@
                     </ul>
                   </div>
 
-                  <!-- Image upload-->
                   <div class="btn-group btn-group-sm">
+                    <!-- Insert embed -->
+                    <a class="btn btn-default" data-action="openModal embed" data-toggle=tooltip data-placement=bottom title="Video/Embed"><i class="fa fa-youtube-play"></i></a>
+                    <!-- Image upload-->
                     <div class="btn btn-default" title="" id="pictureBtn" data-toggle="tooltip" data-placement=bottom data-original-title="Insert picture (or just drag &amp; drop)"><i class="fa fa-picture-o"></i>
                       <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" style="opacity: 0; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;" data-monkey-image-inserter>
                     </div>
@@ -174,13 +176,24 @@
                   </div>
                   <input type="text" data-edit="inserttext" id="voiceBtn" x-webkit-speech="" style="display: none;">
                 </div>
-                <textarea class="form-control" id="monkey-editor" data-monkey-editor>
-                </textarea>
-
-                <br>
 
                 <!-- Modals -->
                 <div class="" data-role="editor-modals">
+                  <!-- Embed -->
+                  <div class="modal fade" data-modal="embed">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-body">
+                          <div class="btn-toolbar no-float" data-role="editor-toolbar" data-target="#monkey-editor">
+                            <!-- Embed area -->
+                            <textarea id=embed_field placeholder="Paste your embed code here" class="form-control"data-edit='insertHTML %{value}' rows=5></textarea>
+                            <br>
+                            <button type=button class="btn btn-primary pull-right" data-action="delegate #embed_field">Insert</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <!-- Link -->
                   <div class="modal fade" data-modal="link">
                     <div class="modal-dialog">
@@ -289,6 +302,13 @@
                     </div><!-- /.modal-dialog -->
                   </div><!-- /.modal -->
                 </div>
+
+
+                <textarea class="form-control" id="monkey-editor" data-monkey-editor>
+                </textarea>
+
+                <br>
+
               </div>
             </form>
 

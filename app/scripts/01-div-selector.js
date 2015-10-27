@@ -4,7 +4,7 @@
     monkey.divSelector = {
         options: {
             divSelector: {
-                selectableTags: ['DIV','TABLE','IMG','TD','P','BLOCKQUOTE','CODE','H1','H2','H3','H4','H5','H6','H7','OL','UL','LI'],
+                selectableTags: ['DIV','TABLE','IMG','TD','P','BLOCKQUOTE','CODE','H1','H2','H3','H4','H5','H6','H7','OL','UL','LI','IFRAME','EMBED','VIDEO'],
                 uneditableTags: ['TD','LI'],
                 selectionBoxClass: 'mk-selection-box',
                 selectionBoxToolbarClass: 'mk-selection-box-tools',
@@ -57,6 +57,10 @@
             moveSelectionBox: function(target) {
                 target = $(target);
                 var pos = target.position();
+
+                if (!pos) {
+                    return;
+                }
                 
                 pos.left = pos.left + this.editor.$.scrollLeft();
                 pos.top = pos.top + this.editor.$.scrollTop();

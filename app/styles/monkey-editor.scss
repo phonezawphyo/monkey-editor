@@ -41,7 +41,7 @@
   padding: 20px 8px;
 
   /* Selection hint */
-  div,table,img {
+  div,table,img,iframe,embed,video {
     min-height: 20px;
     border-left: 5px dotted rgba(0,0,0,0.1);
     //outline: 1px dashed rgba(0,0,0,0.2);

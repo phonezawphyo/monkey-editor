@@ -113,6 +113,10 @@
                 var target = e.selectTarget,
                     spaceDivs= $(this).data('space-divs');
 
+                if (!target) {
+                    return;
+                }
+
                 if (spaceDivs.excludeTags.indexOf(target.tagName) === -1) {
                     spaceDivs.clearHideTimer();
 

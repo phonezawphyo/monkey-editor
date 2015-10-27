@@ -38,6 +38,10 @@
                 }
             },
 
+            delegate: function(selector) {
+                this.triggerInputAction($(selector));
+            },
+
             setCss: function (cssStr) {
                 var mk = this.mk,
                     target = mk.divSelector.lastSelectedTarget;
@@ -159,13 +163,7 @@
 
                 /* Return key */
                 if (e.keyCode === 13) {
-                    if (!!command) {
-                        command = command.parseValue($this.val());
-                    }
-                    if (!!action) {
-                        action = action.parseValue($this.val());
-                    }
-                    mk.toolbar.processCommandOrAction(command, action);
+                    mk.toolbar.triggerInputAction($this);
                     e.preventDefault();
                 }
             },
@@ -216,14 +214,28 @@
             },
             processAction: function (actionAndArgs) {
                 var arr = actionAndArgs.split(' '),
-                    action = arr.shift();
+                    action = arr.shift(),
+                    arr = arr.join(' ');
 
-                monkey.toolbar.actions[action].apply(this, arr);
+                monkey.toolbar.actions[action].apply(this, [arr]);
 
                 this.mk.$.trigger({
                     type: 'monkey:execAction',
                     action: action,
                 });
+            },
+            triggerInputAction: function($input) {
+                var mk = this.mk,
+                    command = $input.attr(mk.options.toolbar.commandKey),
+                    action = $input.attr(mk.options.toolbar.actionKey);
+
+                if (!!command) {
+                    command = command.parseValue($input.val());
+                }
+                if (!!action) {
+                    action = action.parseValue($input.val());
+                }
+                mk.toolbar.processCommandOrAction(command, action);
             },
             storeCssActions: function () {
                 var options = this.options.toolbar;
@@ -398,6 +410,7 @@
         this.editor = this.mk.editor;
         this.options = this.mk.options;
         this.processAction = fn.processAction;
+        this.triggerInputAction = fn.triggerInputAction;
         this.storeCssActions = fn.storeCssActions;
         this.update = fn.update;
         this.updateCssActions = fn.updateCssActions;
