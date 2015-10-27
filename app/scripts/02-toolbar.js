@@ -168,27 +168,20 @@
             fileDrop: function (e) {
                 var $this = $(this),
                     mk = $this.data('monkey-editor'),
-                    editor = mk.editor,
-                    dataTransfer = e.originalEvent.dataTransfer,
-                    isFileDrop = (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0);
+                    editor = mk.editor;
 
                 e.stopPropagation();
                 e.preventDefault();
 
+                editor.handleDroppedContent(e.originalEvent.dataTransfer);
 
-                if (isFileDrop) {
-                    mk.toolbar.insertFiles(dataTransfer.files);
-                }
-                else {
-                    editor.handleDroppedContent(e.originalEvent.dataTransfer);
-                }
                 $(this).val('');
             },
             fileChange: function() {
                 var $this = $(this),
                     mk = $this.data('monkey-editor');
                 if (this.type === 'file' && this.files && this.files.length > 0) {
-                    mk.toolbar.insertFiles(this.files);
+                    mk.insertFiles(this.files);
                     $(this).val('');
                 }
             },
@@ -382,23 +375,6 @@
                 fReader.readAsDataURL(fileInfo);
                 return loader.promise();
             },
-
-            insertFiles: function (files) {
-                var mk = this.mk,
-                    editor = mk.editor;
-                $.each(files, function (idx, fileInfo) {
-                    if (/^image\//.test(fileInfo.type)) {
-                        $.when(monkey.toolbar.fn.convertFileIntoUrl(fileInfo))
-                        .done(function (dataUrl) {
-                            editor.execCommand('insertImage ' + dataUrl);
-                        }).fail(function () {
-                            //options.fileUploadError("file-reader", e);
-                        });
-                    } else {
-                        //options.fileUploadError("unsupported-file-type", fileInfo.type);
-                    }
-                });
-            },
         },
     };
 
@@ -417,7 +393,6 @@
         this.toggleFullscreen = fn.toggleFullscreen;
         this.resetFullscreenWrapperTop = fn.resetFullscreenWrapperTop;
         this.processCommandOrAction = fn.processCommandOrAction;
-        this.insertFiles = fn.insertFiles;
         this.addClass('mk-toolbar');
         this.storeCssActions();
         return this;

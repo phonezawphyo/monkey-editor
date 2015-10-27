@@ -24,6 +24,7 @@
         klass: function(monkeyEditor) {
             var fn = monkey.divSelector.fn;
             this.monkeyEditor = monkeyEditor;
+            this.mk = monkeyEditor;
             this.options = monkeyEditor.options;
             this.target = null;
             this.makeSelectionBox = monkey.divSelector.views.makeSelectionBox;
@@ -152,19 +153,17 @@
                 });
             },
             removeTarget: function () {
-                var $target = $(this.target);
+                var $target = $(this.target),
+                    mk = this.mk,
+                    editor = mk.editor;
+
+                editor.$.trigger({
+                    type: 'monkey:elementRemoved',
+                    removedElement: this.target,
+                });
 
                 this.triggerUnselect();
                 $target.remove();
-                /*
-                return;
-                editor.selectNode(target);
-                if (target.tagName === 'H1') {
-                    document.execCommand('formatBlock', false, '<div>');
-                    editor.selectNode(target);
-                }
-                document.execCommand('delete', false);
-               */
             },
         },
         bindings: {
@@ -225,6 +224,11 @@
         });
         editor.$.on('blur', function () {
             divSelector.triggerUnselect();
+        })
+        .on('monkey:fileInserted', function(e) {
+            setTimeout(function() {
+                divSelector.triggerSelect(e.insertedElement);
+            },100);
         });
         this.$.on('monkey:beforeViewSwitch', function (e) {
             if (e.toView !== editor) {

@@ -1,5 +1,13 @@
 'use strict';
 (function($) {
+    window.File.prototype.convertToBase64 = function(callback){
+        var FR = new FileReader();
+        FR.onload = function(e) {
+            callback(e.target.result);
+        };
+        FR.readAsDataURL(this);
+    };
+
     /* Core methods */
     var monkey = $.extend(true, {
         klass: function (elem, options) {
@@ -24,6 +32,12 @@
                     'preserve_newlines': true,
                 },
 
+                image: {
+                    // Convert added images to object url
+                    // If false, image urls will be in base64 
+                    objectUrl: true,
+                },
+
             }, options);
 
             /* Utilities */
@@ -33,6 +47,9 @@
             this.switchView = monkey.fn.switchView;
             this.toggleFullscreen = monkey.fn.toggleFullscreen;
             this.tidyHtml = monkey.fn.tidyHtml;
+            this.dataURItoBlob = monkey.fn.dataURItoBlob;
+            this.insertFiles = monkey.fn.insertFiles;
+            this.insertFile = monkey.fn.insertFile;
             
             /* Init wrapper with resizer */
             this.wrapper = new monkey.wrapper.klass(this);
@@ -100,6 +117,61 @@
                     return window.html_beautify(code, this.options.beautifyHtml);
                 } else {
                     return code;
+                }
+            },
+            /* jshint ignore:end */
+            dataURItoBlob: function(dataURI) {
+              // convert base64/URLEncoded data component to raw binary data held in a string
+                var byteString;
+                if (dataURI.split(',')[0].indexOf('base64') >= 0) {
+                    byteString = atob(dataURI.split(',')[1]);
+                } else {
+                    byteString = window.unescape(dataURI.split(',')[1]);
+                }
+
+                // separate out the mime component
+                var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+                // write the bytes of the string to a typed array
+                var ia = new Uint8Array(byteString.length);
+                for (var i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+
+                return new Blob([ia], {type:mimeString});
+            },
+            insertFile: function (dataUrl) {
+                if (!!dataUrl) {
+                    var editor = this.editor,
+                        inserted = editor.execCommand('insertImage ' + dataUrl);
+                    editor.$.trigger({
+                        type: 'monkey:fileInserted',
+                        insertedElement: inserted,
+                    });
+                }
+            },
+            /* jshint ignore:start */
+            insertFiles: function (files) {
+                var mk = this,
+                    URL = window.URL || window.webkitURL,
+                    editor = mk.editor;
+                for (var i = 0, f; !!(f = files[i]); i++) {
+                    if (/^image\//.test(f.type)) {
+                        if (editor.options.image.objectUrl) {
+                            try {
+                                if (URL) {
+                                    var dataUrl = URL.createObjectURL(f);
+                                    mk.insertFile(dataUrl);
+                                }
+                            } catch(e) {
+                                console.error(e);
+                            }
+                        } else {
+                            f.convertToBase64(function(url) {
+                                mk.insertFile(url);
+                            });
+                        }
+                    }
                 }
             },
             /* jshint ignore:end */
@@ -178,10 +250,8 @@
             this.cleanEditingLayers = fn.cleanEditingLayers;
 
             this.nextInsertId = fn.nextInsertId;
-            this.insertAtCaret = fn.insertAtCaret;
 
             this.triggerUnfocus = fn.triggerUnfocus;
-            this.triggerInsertNode = fn.triggerInsertNode;
 
             this.saveSelection = fn.saveSelection;
             this.restoreSelection = fn.restoreSelection;
@@ -239,6 +309,14 @@
                 if (command.indexOf('insert') === 0 && !!args) {
                     insertId = this.nextInsertId();
                     if (command === 'insertImage') {
+                        if (this.options.image.objectUrl && args.indexOf('data:image') === 0) {
+                            args = this.mk.dataURItoBlob(args);
+
+                            var urlCreator = window.URL || window.webkitURL,
+                                imageUrl = urlCreator.createObjectURL(args);
+
+                            args = imageUrl;
+                        }
                         argsWithMonkeyId = $('<img>').attr({src: args}).css({width: '100%'});
                         command = 'insertHTML';
                     } else {
@@ -277,12 +355,6 @@
             },
             extendBindings: function (extBindings) {
                 monkey.bindings = $.extend(true, extBindings, monkey.bindings);
-            },
-            triggerInsertNode: function (target) {
-                this.$.trigger({
-                    type: 'monkey:insertNode',
-                    insertTarget: target,
-                });
             },
             getCurrentRange: function () {
                 var sel = window.getSelection();
@@ -324,26 +396,6 @@
                     selection.addRange(to);
                 }
             },
-            insertAtCaret: function (html) {
-                var doc = document;
-                var range;
-                if (html instanceof $) {
-                    html = html[0];
-                }
-                // IE <= 10
-                if (document.selection){
-                    range = doc.selection.createRange();
-                    range.pasteHTML(html);
-                    this.triggerInsertNode(html);
-                
-                // IE 11 && Firefox, Opera .....
-                } else if (document.getSelection){
-                    range = doc.getSelection().getRangeAt(0);
-                    //range.surroundContents(html);
-                    range.insertNode(html);
-                    this.triggerInsertNode(html);
-                }
-            },
             moveCaret: function (win, charCount) {
                 var sel, range;
                 if (win.getSelection) {
@@ -364,27 +416,31 @@
             handleDroppedContent: function(dataTransfer) {
                 // Dropped from another website 
                 //console.log('org.chromium.image-html',e.originalEvent.dataTransfer.getData('org.chromium.image-html'));
-                var textHtml = dataTransfer.getData('text/html'),
+                
+                var editor = this,
+                    mk = editor.mk,
+                    textHtml = dataTransfer.getData('text/html'),
                     textPlain = dataTransfer.getData('text/plain'), // Safari
+                    files = dataTransfer.files,
                     dataUrl;
 
-                if (!!textHtml) {
-                    dataUrl = $(textHtml).filter('img').attr('src');
-                    if (!dataUrl) {
-                        dataUrl = $(textHtml).find('img').attr('src');
-                    }
+                if (!!files && files.length > 0) {
+                    mk.insertFiles(files);
+                    return true;
                 } else {
-                    dataUrl = textPlain;
-                }
-
-                if (!!dataUrl) {
-                    var inserted = this.execCommand('insertImage ' + dataUrl);
-                    this.$.trigger({
-                        type: 'monkey:contentDropped',
-                        insertedElement: inserted,
-                    });
+                    if (!!textHtml) {
+                        dataUrl = $(textHtml).filter('img').attr('src');
+                        if (!dataUrl) {
+                            dataUrl = $(textHtml).find('img').attr('src');
+                        }
+                    } else {
+                        dataUrl = textPlain;
+                    }
+                    mk.insertFile(dataUrl);
                     return true;
                 }
+
+
                 return false;
             },
         },
