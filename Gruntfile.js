@@ -370,7 +370,7 @@ module.exports = function (grunt) {
                     expand: true,
                     dot: true,
                     cwd: '<%= config.app %>',
-                    src: ['img/{,*/}*.*'],
+                    src: ['images/{,*/}*.*'],
                     dest: '<%= config.dist %>'
                 }]
             },
