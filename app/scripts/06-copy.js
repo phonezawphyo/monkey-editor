@@ -146,9 +146,9 @@
 
         this.copier = copier;
 
-        editor.$.on('keydown', null, 'ctrl+c, meta+c', bindings.makeCutOrCopy('copy'));
-        editor.$.on('keydown', null, 'ctrl+x, meta+x', bindings.makeCutOrCopy('cut'));
-        editor.$.on('keydown', null, 'ctrl+v, meta+v', bindings.paste);
+        editor.$.on('keydown', null, 'ctrl+c meta+c', bindings.makeCutOrCopy('copy'));
+        editor.$.on('keydown', null, 'ctrl+x meta+x', bindings.makeCutOrCopy('cut'));
+        editor.$.on('keydown', null, 'ctrl+v meta+v', bindings.paste);
         editor.$.on('monkey:selectionBoxReplaced', function() {
             var copy = bindings.makeCutOrCopy('copy'),
                 savedRange = editor.getCurrentRange();
