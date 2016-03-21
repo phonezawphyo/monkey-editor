@@ -40,6 +40,10 @@ REQUIRED monkey editor after vendor javascripts.
 
 ## Add Toolbar
 
+__For a more complete toolbar, refer to [Default Toolbar](toolbars/default_toolbar.html)__
+
+__For details, refer to [TOOLBAR.md](TOOLBAR.md)__
+
 ```html
 <div class="btn-toolbar" data-role="editor-toolbar" data-target="#monkey-editor">
   <div class="btn-group btn-group-sm">
@@ -54,7 +58,6 @@ REQUIRED monkey editor after vendor javascripts.
 </div>
 ```
 
-For a more complete toolbar, refer to [toolbar](toolbars/default_toolbar.html)
 
 ## Render MonkeyEditor
 
@@ -235,9 +238,6 @@ There are two ways to render monkeyEditor().
   },
 }
 ```
-
-
-# Toolbar
 
 
 # Development
