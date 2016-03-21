@@ -5,7 +5,7 @@
         options: {
             divSelector: {
                 selectableTags: ['DIV','TABLE','IMG','TR','TD','P','BLOCKQUOTE','CODE','H1','H2','H3','H4','H5','H6','H7','OL','UL','LI','IFRAME','EMBED','VIDEO'],
-                uneditableTags: ['TR','TD','LI'],
+                unremovableTags: ['TR','TD','LI'],
                 selectionBoxClass: 'mk-selection-box',
                 selectionBoxToolbarClass: 'mk-selection-box-tools',
             },
@@ -37,7 +37,7 @@
             this.moveSelectionBox = fn.moveSelectionBox;
             this.removeTarget = fn.removeTarget;
             this.isSelected = fn.isSelected;
-            this.isTargetEditable = fn.isTargetEditable;
+            this.isTargetRemovable = fn.isTargetRemovable;
 
             /* Select and unselect methods*/
             this.triggerSelect = fn.triggerSelect;
@@ -52,8 +52,8 @@
                     this.$.toggleClass('hidden',!show);
                 }
             },
-            isTargetEditable: function() {
-                return (this.uneditableTags.indexOf(this.target.tagName) === -1);
+            isTargetRemovable: function() {
+                return (this.unremovableTags.indexOf(this.target.tagName) === -1);
             },
             moveSelectionBox: function(target) {
                 target = $(target);
@@ -108,7 +108,7 @@
                 });
 
                 if (!!this.$deleteButton) {
-                    this.$deleteButton.toggle(this.isTargetEditable());
+                    this.$deleteButton.toggle(this.isTargetRemovable());
                 }
                 
                 this.editor.$.trigger({
