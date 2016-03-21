@@ -6,7 +6,7 @@
             spaceDivs: {
                 moveDelay: 0,
                 hideDelay: 0,
-                excludeTags: ['TD'],
+                excludeTags: ['TD','TH','TR'],
             },
         },
 
