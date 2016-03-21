@@ -228,6 +228,7 @@
                 this.mk.$.trigger({
                     type: 'monkey:execAction',
                     action: action,
+                    param: param,
                 });
             },
             triggerInputAction: function($input) {
