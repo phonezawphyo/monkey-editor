@@ -44,7 +44,7 @@
             this.triggerUnselect = fn.triggerUnselect;
 
             this.selectableTags = this.options.divSelector.selectableTags;
-            this.uneditableTags = this.options.divSelector.uneditableTags;
+            this.unremovableTags = this.options.divSelector.unremovableTags;
         },
         fn: {
             toggleSelectionBox: function(show) {
