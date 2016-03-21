@@ -20,9 +20,6 @@
                 // Set height of editable area
                 height: 450,
 
-                // Icon prefix
-                iconPrefix: 'glyphicon glyphicon-',
-
                 // Resize bar
                 resizer: true,
 
