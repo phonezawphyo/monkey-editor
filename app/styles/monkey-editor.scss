@@ -87,6 +87,7 @@
   .mk-selection-box {
     $select-color: rgba(0,0,200,0.6);
     $margin-color: rgba(250,160,0,0.3);
+    $padding-color: rgba(0,250,160,0.3);
     min-height: 20px;
     min-width: 20px;
     border: 2px dashed $select-color !important;
@@ -98,7 +99,11 @@
       linear-gradient(to bottom, #{$margin-color}, #{$margin-color}) left center no-repeat, 
       linear-gradient(to bottom, #{$margin-color}, #{$margin-color}) right center no-repeat,
       linear-gradient(to bottom, #{$margin-color}, #{$margin-color}) center top no-repeat, 
-      linear-gradient(to bottom, #{$margin-color}, #{$margin-color}) center bottom no-repeat;
+      linear-gradient(to bottom, #{$margin-color}, #{$margin-color}) center bottom no-repeat,
+      linear-gradient(to bottom, #{$padding-color}, #{$padding-color}) left no-repeat,
+      linear-gradient(to bottom, #{$padding-color}, #{$padding-color}) right no-repeat,
+      linear-gradient(to bottom, #{$padding-color}, #{$padding-color}) top no-repeat,
+      linear-gradient(to bottom, #{$padding-color}, #{$padding-color}) bottom no-repeat;
 
     &:before {
       content: '';

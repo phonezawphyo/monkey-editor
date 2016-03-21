@@ -69,20 +69,44 @@
                 var marginTop = target.css('margin-top'),
                     marginBottom = target.css('margin-bottom'),
                     marginLeft = target.css('margin-left'),
-                    marginRight = target.css('margin-right');
+                    marginRight = target.css('margin-right'),
+                    paddingTop = target.css('padding-top'),
+                    paddingBottom = target.css('padding-bottom'),
+                    paddingLeft = target.css('padding-left'),
+                    paddingRight = target.css('padding-right'),
+                    innerWidth = target.innerWidth(),
+                    innerHeight = target.innerHeight(),
+                    width = target.outerWidth(true),
+                    height = target.outerHeight(true),
+                    bgPosition =
+                        'left center, right center, center top, center bottom, ' +
+                        marginLeft + ' ' + marginTop + ', ' +
+                        (parseInt(marginLeft)+innerWidth-parseInt(paddingRight)) + 'px ' + marginTop + ', ' +
+                        marginLeft + ' ' + marginTop + ', ' +
+                        marginLeft + ' ' + (parseInt(marginTop)+innerHeight-parseInt(paddingBottom)) + 'px',
+                    bgSize = 
+                        marginLeft + ' 100%,' +
+                        marginRight + ' 100%,' +
+                        '100% ' + marginTop + ',' +
+                        '100% ' + marginBottom + ',' +
+
+                        paddingLeft + ' ' + innerHeight + 'px,' +
+                        paddingRight + ' ' + innerHeight + 'px,' +
+                        innerWidth + 'px ' + paddingTop + ',' +
+                        innerWidth + 'px ' + paddingBottom;
+
+                    console.log('nan',parseInt(marginLeft)+innerWidth-parseInt(paddingRight));
+                console.log('post', bgPosition);console.log('size', bgSize);
 
                 this.replaceSelectionBox();
 
                 this.$.css({
                     left: pos.left + 'px',
                     top: pos.top + 'px',
-                    width: target.outerWidth(true) + 'px',
-                    height: target.outerHeight(true) + 'px',
-                    'background-size':
-                        marginLeft + ' 100%,' +
-                        marginRight + ' 100%,' +
-                        '100% ' + marginTop + ',' +
-                        '100% ' + marginBottom,
+                    width: width + 'px',
+                    height: height + 'px',
+                    'background-position': bgPosition,
+                    'background-size': bgSize,
                 });
 
                 if (!!this.$deleteButton) {
