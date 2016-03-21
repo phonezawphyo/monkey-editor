@@ -78,25 +78,23 @@
                     innerHeight = target.innerHeight(),
                     width = target.outerWidth(true),
                     height = target.outerHeight(true),
+                    /* (margin) left, right, top, bottom, (padding) left, right, top, bottom */
                     bgPosition =
                         'left center, right center, center top, center bottom, ' +
                         marginLeft + ' ' + marginTop + ', ' +
                         (parseInt(marginLeft)+innerWidth-parseInt(paddingRight)) + 'px ' + marginTop + ', ' +
                         marginLeft + ' ' + marginTop + ', ' +
                         marginLeft + ' ' + (parseInt(marginTop)+innerHeight-parseInt(paddingBottom)) + 'px',
+                    /* (margin) left, right, top, bottom, (padding) left, right, top, bottom */
                     bgSize = 
                         marginLeft + ' 100%,' +
                         marginRight + ' 100%,' +
                         '100% ' + marginTop + ',' +
                         '100% ' + marginBottom + ',' +
-
                         paddingLeft + ' ' + innerHeight + 'px,' +
                         paddingRight + ' ' + innerHeight + 'px,' +
                         innerWidth + 'px ' + paddingTop + ',' +
                         innerWidth + 'px ' + paddingBottom;
-
-                    console.log('nan',parseInt(marginLeft)+innerWidth-parseInt(paddingRight));
-                console.log('post', bgPosition);console.log('size', bgSize);
 
                 this.replaceSelectionBox();
 
