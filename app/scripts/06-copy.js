@@ -167,7 +167,7 @@
                 bindings.paste.call(editor.$, e);
             });
         }).on('monkey:selectionBoxMoved', function() {
-            var toggle = divSelector.isTargetEditable();
+            var toggle = divSelector.isTargetRemovable();
                 
             if (!!copier.$pasteButton) {
                 copier.$pasteButton.toggle(toggle);
