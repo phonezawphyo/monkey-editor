@@ -54,7 +54,7 @@ REQUIRED monkey editor after vendor javascripts.
 </div>
 ```
 
-For a more complete toolbar, refer to [toolbar]()
+For a more complete toolbar, refer to [toolbar](toolbars/default_toolbar.html)
 
 ## Render MonkeyEditor
 
