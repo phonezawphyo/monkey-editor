@@ -86,7 +86,7 @@
                         marginLeft + ' ' + marginTop + ', ' +
                         marginLeft + ' ' + (parseInt(marginTop)+innerHeight-parseInt(paddingBottom)) + 'px',
                     /* (margin) left, right, top, bottom, (padding) left, right, top, bottom */
-                    bgSize = 
+                    bgSize =
                         marginLeft + ' 100%,' +
                         marginRight + ' 100%,' +
                         '100% ' + marginTop + ',' +
