@@ -88,7 +88,7 @@ __To see all available options, refer to [OPTIONS.md](OPTIONS.md)__
 </script>
 ```
 
-### 3. Events
+## Events
 
 __To see available events and callbacks, refer to [EVENTS.md](EVENTS.md)__
 
