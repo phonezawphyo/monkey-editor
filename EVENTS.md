@@ -27,12 +27,18 @@ monkey:valueUpdated keyword, newValue
 
 # Setting up image autoupload to server
 
+
+# Setting up image autoupload to server
+
+## Events to use
+
 ```
 monkey:fileInserted
 monkey:elementRemoved
 ```
 
-# Example to upload images to server automatically
+## Example
+
 ```js
 (function($) {
   var monkey = window.monkey;
