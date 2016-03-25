@@ -27,9 +27,6 @@ monkey:valueUpdated keyword, newValue
 
 # Setting up image autoupload to server
 
-
-# Setting up image autoupload to server
-
 ## Events to use
 
 ```
