@@ -1,6 +1,8 @@
 # Monkey Editor
 WYSIWYG editor inspired by [Bootstrap wysiwyg](https://github.com/steveathon/bootstrap-wysiwyg) and [Summernote](http://summernote.org/)
 
+[Demo](http://editor.pzp.rocks/)
+
 # Usage
 ## Add CSS
 OPTIONAL bootstrap and font-awesome styles
