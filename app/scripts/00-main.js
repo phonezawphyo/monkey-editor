@@ -137,10 +137,14 @@
 
                 return new Blob([ia], {type:mimeString});
             },
-            insertFile: function (dataUrl) {
+            insertFile: function (dataUrl, f) {
                 if (!!dataUrl) {
                     var editor = this.editor,
                         inserted = editor.execCommand('insertImage ' + dataUrl);
+                        if(!!f){
+                          inserted.setAttribute("data-filename", f.name);
+                          inserted.setAttribute("data-type", f.type);
+                        }
                     editor.$.trigger({
                         type: 'monkey:fileInserted',
                         insertedElement: inserted,
@@ -158,14 +162,14 @@
                             try {
                                 if (URL) {
                                     var dataUrl = URL.createObjectURL(f);
-                                    mk.insertFile(dataUrl);
+                                    mk.insertFile(dataUrl, f);
                                 }
                             } catch(e) {
                                 console.error(e);
                             }
                         } else {
                             f.convertToBase64(function(url) {
-                                mk.insertFile(url);
+                                mk.insertFile(url, f);
                             });
                         }
                     }
